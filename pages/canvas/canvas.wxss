@@ -1,0 +1,41 @@
+/* pages/canvas/canvas.wxss */
+
+.canvas-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.canvas-show {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #000;
+  margin-top: 4rpx;
+  margin-left: 3rpx;
+  margin-right: 3rpx;
+}
+
+.In-section {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: row;
+  background: green;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;  
+  margin-left: 4rpx;
+  margin-right: 4rpx;
+}
+
+.timer-ctrl {
+  display: flex;
+  margin-top: 10rpx;
+  flex-direction: row;
+  align-items: center;
+}
