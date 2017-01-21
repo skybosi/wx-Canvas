@@ -1,12 +1,13 @@
-<view>
-  <text class="canvas-text">Hello Canvas</text>
-
+<view class="stage">
+  <text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text>
   <!-- canvas.wxml -->
   <view class="canvas-show">
-    <canvas style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
+    <canvas bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
   </view>
   <view class="In-section">
-    <label>{{inputShow}}</label>
+    <view class="label">
+      <label>{{inputShow}}</label>
+    </view>
     <view class="section">
       <input bindchange="bindChange" placeholder="input" focus="{{focus}}" />
     </view>

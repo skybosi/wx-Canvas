@@ -7,13 +7,12 @@
 }
 
 .canvas-show {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: #FFFFCC;
+  opacity: 0.8;  
   border: 1px solid #000;
-  margin-top: 4rpx;
-  margin-left: 3rpx;
-  margin-right: 3rpx;
+  margin-top: 20rpx;
+  margin-left: 15rpx;
+  margin-right: 15rpx;
 }
 
 .In-section {
@@ -23,12 +22,16 @@
   bottom: 0;
 }
 
+.label {
+  word-break: break-all;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
 .section {
-  display: flex;
-  flex-direction: row;
-  background: green;
+  background: gray;
   margin-top: 10rpx;
-  margin-bottom: 10rpx;  
+  margin-bottom: 10rpx;
   margin-left: 4rpx;
   margin-right: 4rpx;
 }

@@ -40,13 +40,21 @@ function example(ctx) {
   ctx.stroke();
 }
 
+function getPosition(e)
+{
+  console.log("getPositon:")
+  //console.log(e.touches[0].x,e.touches[0].y);
+  return [e.touches[0].x,e.touches[0].y];
+}
+
 Page({
   data: {
     canvasWidth: "300",
     canvasHeight: "300",
     lazytime: "100",
     btctrl: "START",
-    inputShow:""
+    inputShow: "",
+    canvasTouchPosition:""
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
@@ -75,13 +83,13 @@ Page({
         data.push([x * 20, 2 * Math.sin(x) * 20]);
       }
       //draw data
-      draw(context, [0, ch / 3], data);
+      //draw(context, [0, ch / 3], data);
       var data2 = [];
       timer = setInterval(function () {
         for (var i = 0; i < cpuData.length; i++) {
           data2.push([i * 5, cpuData[i]]);
         }
-        draw(context, [0, ch / 3], data2);
+        draw(context, [0, ch / 3], data2, "green");
         context.stroke();
         //调用wx.drawCanvas，通过canvasId指定在哪张画布上绘制，通过actions指定绘制行为
         wx.drawCanvas({
@@ -117,11 +125,32 @@ Page({
     });
     console.log("lazytime: " + this.data.lazytime);
   },
-  bindChange: function(e)
-  {
+  bindChange: function (e) {
     console.log(e.detail.value);
     this.setData({
-      inputShow:e.detail.value
+      inputShow: e.detail.value
     });
+  },
+  touchStart: function (e) {
+    console.log("Touched...");
+    var pos = getPosition(e);
+    console.log(pos[0],pos[1]);
+        this.setData({
+      canvasTouchPosition:" (x: " + pos[0] + ",y: " + pos[1] + ")"
+    });
+    console.log(e);
+  },
+  touchMove: function (e) {
+    console.log("Touch Move... ");
+    var pos = getPosition(e);
+    console.log(pos[0], pos[1]);
+    this.setData({
+      canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1]+ ")"
+    });
+    console.log(e);
+  },
+  touchEnd: function (e) {
+    console.log("Touch  end... ");
+    console.log(e);
   }
 });
