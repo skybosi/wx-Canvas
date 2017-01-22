@@ -38,7 +38,6 @@ function update(ctx, origin, data, color) {
 }
 
 function drag(moveArray) {
-  console.log("kakakkk " + context);
   if (moveArray.length != 0) {
     var m = [
       moveArray[0][0] - moveArray[moveArray.length - 1][0],
@@ -76,7 +75,8 @@ function example(ctx) {
 function getPosition(e) {
   console.log("getPositon:")
   //console.log(e.touches[0].x,e.touches[0].y);
-  return [e.touches[0].x, e.touches[0].y];
+  //return [e.touches[0].x, e.touches[0].y];
+  return [e.changedTouches[0].x, e.changedTouches[0].y];  
 }
 
 Page({
@@ -143,7 +143,7 @@ Page({
     context = wx.createContext();
     origin = [0, this.data.canvasHeight / 2];
   },
-  startDraw: function startDraw() {
+  startDraw: function startDraw(e) {
     var status = this.data.btctrl;
     //console.log("current status: " + status);
     if (status == "START") {
@@ -205,12 +205,15 @@ Page({
     this.setData({
       canvasTouchPosition: " (x: " + pos[0] + ",y: " + pos[1] + ")"
     });
+    moveArray.push(pos);
     console.log(e);
   },
   touchMove: function (e) {
     console.log("Touch Move... ");
     var pos = getPosition(e);
     moveArray.push(pos);
+    drag(moveArray);
+    moveArray.shift();
     console.log(pos[0], pos[1]);
     this.setData({
       canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1] + ")"
@@ -220,7 +223,10 @@ Page({
   touchEnd: function (e) {
     console.log("Touch  end... ");
     console.log(e);
-    console.log(moveArray);
+    var pos = getPosition(e);
+    moveArray.push(pos);
     drag(moveArray);
+    moveArray.shift();
+    moveArray.length = 0;
   }
 });

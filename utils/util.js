@@ -28,7 +28,7 @@ function move(data,range) {
     //console.log("last: " + head);
     data.push(head);
   } else {
-    moveX =range[0];
+    moveX = range[0] * 0.5;
   }
   for (var i = 0; i < data.length; ++i) {
     data[i][0] -= moveX;
