@@ -5,52 +5,44 @@ var cpuData = Data.data.cpu.slice();
 var timer = null;
 var moveArray = [];
 var data = [];
+var data2 = [];
 var context;
 var origin;
 //draw line each point
-function draw(ctx, origin, data, color) {
+function draw(ctx, origin, srcdata, color) {
   if (color == undefined) {
     color = "black";
   }
   ctx.setStrokeStyle(color);
   //console.log("origin: " + origin);
-  //console.log("data: " + data);
-  //ctx.quadraticCurveTo(origin[0],origin[1],data[0][0],data[0][1]);
-  //ctx.moveTo(origin[0], origin[1]);
+  //console.log("srcdata: " + srcdata);
+  //ctx.quadraticCurveTo(origin[0],origin[1],srcdata[0][0],srcdata[0][1]);
+  ctx.moveTo(origin[0] + srcdata[0][0], origin[1] + srcdata[0][1]);
   var i = 0;
-  for (; i < data.length; i++) {
-    //console.log(data[i] + " " + data[i][0] + " " + data[i][1]);
-    //ctx.quadraticCurveTo(origin[0]+data[i][0],data[i][1],origin[0]+data[i+1][0],data[i+1][1])
-    ctx.lineTo(origin[0] + data[i][0], origin[1] + data[i][1]);
+  for (; i < srcdata.length; i++) {
+    //console.log(srcdata[i] + " " +srcdata[i][0] + " " + srcdata[i][1]);
+    //ctx.quadraticCurveTo(origin[0]+srcdata[i][0],srcdata[i][1],origin[0]+srcdata[i+1][0],srcdata[i+1][1])
+    ctx.lineTo(origin[0] + srcdata[i][0], origin[1] + srcdata[i][1]);
   }
+  ctx.stroke();
   //console.log(ctx);
 }
 
-function update(ctx, origin, data, color) {
-  draw(ctx, origin, data, color);
-  util.move(data);
+function update(ctx, origin, srcdata, color) {
+  draw(ctx, origin, srcdata, color);
+  util.move(srcdata);
   ctx.stroke();
-  //调用wx.drawCanvas，通过canvasId指定在哪张画布上绘制，通过actions指定绘制行为
-  wx.drawCanvas({
-    canvasId: 'firstCanvas',
-    actions: ctx.getActions() //获取绘图动作数组
-  });
 }
 
-function drag(moveArray) {
+function drag(srcdata,moveArray) {
   if (moveArray.length != 0) {
     var m = [
       moveArray[0][0] - moveArray[moveArray.length - 1][0],
       moveArray[0][1] - moveArray[moveArray.length - 1][1]];
     console.log(m);
-    util.move(data, m);
+    util.move(srcdata, m);
     //moveArray.length = 0;
-    draw(context, origin, data, "green");
-    context.stroke();
-    wx.drawCanvas({
-      canvasId: 'firstCanvas',
-      actions: context.getActions() //获取绘图动作数组
-    });
+    draw(context, origin, srcdata);
   }
 }
 
@@ -76,7 +68,7 @@ function getPosition(e) {
   console.log("getPositon:")
   //console.log(e.touches[0].x,e.touches[0].y);
   //return [e.touches[0].x, e.touches[0].y];
-  return [e.changedTouches[0].x, e.changedTouches[0].y];  
+  return [e.changedTouches[0].x, e.changedTouches[0].y];
 }
 
 Page({
@@ -140,34 +132,39 @@ Page({
   onReady: function (e) {
     console.log("canvas is ready...")
     //使用wx.createContext获取绘图上下文context
-    context = wx.createContext();
-    origin = [0, this.data.canvasHeight / 2];
+    //context = wx.createContext();
+    context = wx.createCanvasContext('firstCanvas');
+    context.setStrokeStyle("rgba(0,255,0)");
+    var cw = this.data.canvasWidth;
+    var ch = this.data.canvasHeight;
+    origin = [0, ch / 2];
+    for (var x = 0; x <= 30; x = x + 0.1) {
+      data.push([x, 3 * Math.sin(x)]);
+    }
+    for (var x = 0; x <= 30; x = x + 0.1) {
+      data2.push([x, 2 * Math.cos(x)]);
+    }
+    util.selfAdapter(data, cw, ch);
+    util.selfAdapter(data2, cw, ch);
   },
-  startDraw: function startDraw(e) {
+  startDraw: function (e) {
     var status = this.data.btctrl;
     //console.log("current status: " + status);
     if (status == "START") {
       this.setData({
         btctrl: "STOP"
       });
-      var cw = this.data.canvasWidth;
-      var ch = this.data.canvasHeight;
-      context.setStrokeStyle("rgba(0,255,0)");
-      //show example
-      //example(context);
-      //context.clear
-      //init data
-      for (var x = 0; x <= 30; x = x + 0.1) {
-        data.push([x, 2 * Math.sin(x)]);
-      }
-      util.selfAdapter(data, cw, ch);
-      var data2 = [];
-      for (var i = 0; i < cpuData.length; ++i) {
-        data2.push([i, cpuData[i]]);
-      }
-      util.selfAdapter(data2, cw, ch);
+      // draw(context, origin, data, "#ff0000");
+      // context.draw(true);      
+      // draw(context, origin, data2, "#00ff00");
+      // context.draw(true);
+      //context.clearActions();
       timer = setInterval(function () {
-        update(context, origin, data, "green");
+        update(context, origin, data, "#ff0000");
+        context.draw(false);
+        update(context, origin, data2, "#ff00ff");
+        context.draw(true);
+        //调用wx.drawCanvas，通过canvasId指定在哪张画布上绘制，通过actions指定绘制行为       
       }, this.data.lazytime);
     } else {
       this.setData({
@@ -212,7 +209,8 @@ Page({
     console.log("Touch Move... ");
     var pos = getPosition(e);
     moveArray.push(pos);
-    drag(moveArray);
+    drag(data,moveArray);
+    drag(data2,moveArray);
     moveArray.shift();
     console.log(pos[0], pos[1]);
     this.setData({
@@ -225,7 +223,8 @@ Page({
     console.log(e);
     var pos = getPosition(e);
     moveArray.push(pos);
-    drag(moveArray);
+    drag(data, moveArray);
+    drag(data2, moveArray);
     moveArray.shift();
     moveArray.length = 0;
   }
