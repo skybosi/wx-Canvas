@@ -1,13 +1,17 @@
 <view class="stage">
-  <view><text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text></view>
+  <view>
+    <text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text>
+  </view>
+
   <!-- canvas.wxml -->
   <view class="canvas-show">
     <canvas bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
   </view>
   <view class="In-section">
-    <view class="label">
+
+    <!--<view class="label">
       <label>{{inputShow}}</label>
-    </view>
+    </view>-->
     <view class="section">
       <input bindchange="bindChange" placeholder="input" focus="{{focus}}" />
     </view>
@@ -15,6 +19,7 @@
       <button bindtap="startDraw" type="default" size="mini">{{btctrl}}</button>
       <button bindtap="fastTimer" size="mini">FAST</button>
       <button bindtap="slowTimer" size="mini">SLOW</button>
+      <text id="lazytime">T: {{lazytime}}</text>
     </view>
   </view>
 </view>

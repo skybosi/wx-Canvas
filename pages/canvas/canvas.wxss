@@ -3,7 +3,7 @@
 .stage {
   height: 100%;
   width: 100%;
-  background: #666666;
+  background: #fff;
   position: fixed;
   top: 0;
   left: 0;
@@ -32,23 +32,25 @@
   bottom: 0;
 }
 
-.label {
-  word-break: break-all;
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
 .section {
-  background: gray;
+  background: white;
+  border: 1px solid #000;
   margin-top: 10rpx;
   margin-bottom: 10rpx;
-  margin-left: 4rpx;
-  margin-right: 4rpx;
+  margin-left: 15rpx;
+  margin-right: 15rpx;
 }
 
 .timer-ctrl {
   display: flex;
-  margin-top: 10rpx;
   flex-direction: row;
   align-items: center;
+  margin-left: 15rpx;
+  margin-right: 50rpx;
+}
+
+.label {
+  word-break: break-all;
+  margin-left: 4px;
+  margin-right: 4px;
 }
