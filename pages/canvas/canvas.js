@@ -49,8 +49,8 @@ function getPosition(e)
 
 Page({
   data: {
-    canvasWidth: "300",
-    canvasHeight: "300",
+    canvasWidth: "0",
+    canvasHeight: "0",
     lazytime: "100",
     btctrl: "START",
     inputShow: "",
@@ -59,8 +59,32 @@ Page({
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
   },
+  onLoad: function () {
+    console.log("canvas is onload...")
+    var W = 0;
+    var H = 0;
+    wx.getSystemInfo({
+      success: function (res) {
+        W = res.windowWidth;
+        H = res.windowHeight;
+        console.log(res.model)
+        console.log(res.pixelRatio)
+        console.log(res.windowWidth)
+        console.log(res.windowHeight)
+        console.log(res.language)
+        console.log(res.version)
+        console.log(res.platform)
+      }
+    })
+    this.setData({
+      canvasWidth: W * 0.8
+    });
+    this.setData({
+      canvasHeight: H * 0.8
+    });
+  },
   onReady: function (e) {
-    console.log("canvas is ready...")
+    console.log("canvas is ready...")    
   },
   startDraw: function () {
     var status = this.data.btctrl;

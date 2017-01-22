@@ -1,5 +1,5 @@
 <view class="stage">
-  <text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text>
+  <view><text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text></view>
   <!-- canvas.wxml -->
   <view class="canvas-show">
     <canvas bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>

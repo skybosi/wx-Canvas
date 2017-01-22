@@ -1,5 +1,14 @@
 /* pages/canvas/canvas.wxss */
 
+.stage {
+  height: 100%;
+  width: 100%;
+  background: #666666;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .canvas-text {
   display: flex;
   flex-direction: column;
@@ -7,10 +16,11 @@
 }
 
 .canvas-show {
-  background: #FFFFCC;
-  opacity: 0.8;  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffc;
   border: 1px solid #000;
-  margin-top: 20rpx;
   margin-left: 15rpx;
   margin-right: 15rpx;
 }
