@@ -19,7 +19,8 @@ function formatNumber(n) {
 function readData(date) {
 }
 function move(data,range) {
-  var moveX;
+  var moveX = 0;
+  var moveY = 0;
   if (range == undefined) {
     moveX = data[1][0] - data[0][0];
     var tail = data[data.length - 1];
@@ -28,10 +29,13 @@ function move(data,range) {
     //console.log("last: " + head);
     data.push(head);
   } else {
-    moveX = range[0] * 0.5;
+    moveX = range[0];
+    moveY = range[1];
   }
-  for (var i = 0; i < data.length; ++i) {
+  var len = data.length;
+  for (var i = 0; i < len; ++i) {
     data[i][0] -= moveX;
+    data[i][1] -= moveY;
   }
 }
 function selfAdapter(data, stageW, stageH) {

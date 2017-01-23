@@ -1,25 +1,23 @@
-<view class="stage">
+<view class="screen">
   <view>
     <text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text>
   </view>
+  <view class="stage">
+    <view class="inPutCtrl">
+      <view class="input">
+        <input bindchange="bindChange" placeholder="|" focus="{{focus}}" />
+      </view>
+      <view class="plot" bindtap="onPlot">PLOT</view>
+    </view>
+    <view class="showCtrl">
+      <text class="plotCtrl" id="lazytime">T: {{lazytime}}</text>
+      <view class="plotCtrl" bindtap="fastTimer">FAST</view>
+      <view class="plotCtrl" bindtap="slowTimer">SLOW</view>
+    </view>
+  </view>
 
   <!-- canvas.wxml -->
-  <view class="canvas-show">
-    <canvas bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
-  </view>
-  <view class="In-section">
-
-    <!--<view class="label">
-      <label>{{inputShow}}</label>
-    </view>-->
-    <view class="section">
-      <input bindchange="bindChange" placeholder="input" focus="{{focus}}" />
-    </view>
-    <view class="timer-ctrl">
-      <button bindtap="startDraw" type="default" size="mini">{{btctrl}}</button>
-      <button bindtap="fastTimer" size="mini">FAST</button>
-      <button bindtap="slowTimer" size="mini">SLOW</button>
-      <text id="lazytime">T: {{lazytime}}</text>
-    </view>
+  <view class="canvas">
+    <canvas class="wxcanvas" bindtap="onLockCanvas" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
   </view>
 </view>

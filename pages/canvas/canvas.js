@@ -1,8 +1,10 @@
 var app = getApp();
 var util = require("../../utils/util.js");
 var Data = require("../../data/data.js");
+var RPNer = require("../../lib/expression.js");
 var cpuData = Data.data.cpu.slice();
 var timer = null;
+var ploted = false;
 var moveArray = [];
 var data = [];
 var data2 = [];
@@ -34,7 +36,7 @@ function update(ctx, origin, srcdata, color) {
   ctx.stroke();
 }
 
-function drag(srcdata,moveArray) {
+function drag(srcdata, moveArray) {
   if (moveArray.length != 0) {
     var m = [
       moveArray[0][0] - moveArray[moveArray.length - 1][0],
@@ -43,6 +45,7 @@ function drag(srcdata,moveArray) {
     util.move(srcdata, m);
     //moveArray.length = 0;
     draw(context, origin, srcdata);
+    context.draw();
   }
 }
 
@@ -65,7 +68,6 @@ function example(ctx) {
 }
 
 function getPosition(e) {
-  console.log("getPositon:")
   //console.log(e.touches[0].x,e.touches[0].y);
   //return [e.touches[0].x, e.touches[0].y];
   return [e.changedTouches[0].x, e.changedTouches[0].y];
@@ -78,7 +80,8 @@ Page({
     lazytime: "500",
     btctrl: "START",
     inputShow: "",
-    canvasTouchPosition: ""
+    canvasTouchPosition: "",
+    lastTapTime: '0'
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
@@ -147,6 +150,28 @@ Page({
     util.selfAdapter(data, cw, ch);
     util.selfAdapter(data2, cw, ch);
   },
+  onPlot: function () {
+    draw(context, origin, data, "#ff0000");
+    context.draw(true);
+    ploted = true;
+  },
+  onLockCanvas: function (e) {
+    var cutTime = e.timeStamp;
+    var lastTime = this.data.lastTapTime;
+    if (lastTime > 0) {
+      if (cutTime - lastTime < 300) {
+        console.log("double click " + cutTime);
+        ploted = false;
+      } else {
+        console.log("click " + cutTime);
+      }
+    } else {
+      console.log("first click " + cutTime);
+    }
+    this.setData({
+      lastTapTime: cutTime
+    });
+  },
   startDraw: function (e) {
     var status = this.data.btctrl;
     //console.log("current status: " + status);
@@ -154,11 +179,7 @@ Page({
       this.setData({
         btctrl: "STOP"
       });
-      // draw(context, origin, data, "#ff0000");
-      // context.draw(true);      
-      // draw(context, origin, data2, "#00ff00");
-      // context.draw(true);
-      //context.clearActions();
+      context.clearActions();
       timer = setInterval(function () {
         update(context, origin, data, "#ff0000");
         context.draw(false);
@@ -190,42 +211,44 @@ Page({
     console.log("lazytime: " + this.data.lazytime);
   },
   bindChange: function (e) {
-    console.log(e.detail.value);
+    console.log(e.detail.value + " = " + RPNer.parser(e.detail.value));
     this.setData({
       inputShow: e.detail.value
     });
   },
   touchStart: function (e) {
-    console.log("Touched...");
     var pos = getPosition(e);
-    console.log(pos[0], pos[1]);
     this.setData({
       canvasTouchPosition: " (x: " + pos[0] + ",y: " + pos[1] + ")"
     });
-    moveArray.push(pos);
-    console.log(e);
+    if (ploted) {
+      moveArray.push(pos);
+    }
+    console.log("Touch Start... " + pos[0], pos[1]);
+    //console.log(e);
   },
   touchMove: function (e) {
-    console.log("Touch Move... ");
     var pos = getPosition(e);
-    moveArray.push(pos);
-    drag(data,moveArray);
-    drag(data2,moveArray);
-    moveArray.shift();
-    console.log(pos[0], pos[1]);
+    if (ploted) {
+      moveArray.push(pos);
+      drag(data, moveArray);
+      moveArray.shift();
+    }
+    console.log("Touch Move... " + pos[0], pos[1]);
     this.setData({
       canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1] + ")"
     });
-    console.log(e);
+    //console.log(e);
   },
   touchEnd: function (e) {
-    console.log("Touch  end... ");
-    console.log(e);
+    //console.log(e);
     var pos = getPosition(e);
-    moveArray.push(pos);
-    drag(data, moveArray);
-    drag(data2, moveArray);
-    moveArray.shift();
-    moveArray.length = 0;
+    if (ploted) {
+      moveArray.push(pos);
+      drag(data, moveArray);
+      moveArray.shift();
+      moveArray.length = 0;
+    }
+    console.log("Touch End... " + pos[0], pos[1]);
   }
 });
