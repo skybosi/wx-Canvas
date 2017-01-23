@@ -48,10 +48,13 @@ function selfAdapter(data, stageW, stageH) {
     data[i][1] *= scaley;
   }
 }
-
+function trim(str){
+	return str.replace(/\s|\xA0/g,"");
+}
 module.exports = {
   formatTime: formatTime,
   readData: readData,
   move: move,
-  selfAdapter: selfAdapter
+  selfAdapter: selfAdapter,
+  trim:trim
 }

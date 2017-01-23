@@ -211,6 +211,7 @@ Page({
     console.log("lazytime: " + this.data.lazytime);
   },
   bindChange: function (e) {
+    e.detail.value = util.trim(e.detail.value);
     console.log(e.detail.value + " = " + RPNer.parser(e.detail.value));
     this.setData({
       inputShow: e.detail.value
