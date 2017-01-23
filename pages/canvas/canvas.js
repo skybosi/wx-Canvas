@@ -79,9 +79,12 @@ Page({
     canvasHeight: "0",
     lazytime: "500",
     btctrl: "START",
-    inputShow: "",
+    inputString: "",
+    SolveResult:"",
     canvasTouchPosition: "",
-    lastTapTime: '0'
+    lastTapTime: '0',
+    resultStatus:"none",
+    canvasStatus: "none"
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
@@ -151,6 +154,9 @@ Page({
     util.selfAdapter(data2, cw, ch);
   },
   onPlot: function () {
+    this.setData({
+      canvasStatus: "flex"
+    });
     draw(context, origin, data, "#ff0000");
     context.draw(true);
     ploted = true;
@@ -210,11 +216,19 @@ Page({
     }
     console.log("lazytime: " + this.data.lazytime);
   },
+  onSolve: function (e) {
+    var input = this.data.inputString;
+    var result = RPNer.parser(input);
+    console.log(input + " = " + result);
+    this.setData({
+      resultStatus:"flex",
+      SolveResult: result
+    });
+  },
   bindChange: function (e) {
     e.detail.value = util.trim(e.detail.value);
-    console.log(e.detail.value + " = " + RPNer.parser(e.detail.value));
     this.setData({
-      inputShow: e.detail.value
+      inputString: e.detail.value
     });
   },
   touchStart: function (e) {

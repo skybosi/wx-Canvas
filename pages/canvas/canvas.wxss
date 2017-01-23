@@ -29,7 +29,6 @@
   flex-direction: row;
   border: 1px solid #000;
   margin-top: 10rpx;
-  margin-bottom: 10rpx;
   margin-left: 15rpx;
   margin-right: 15rpx;
 }
@@ -40,10 +39,25 @@
   padding: 10rpx;
 }
 
+.solve {
+  border-left: 1px solid #000;
+  padding: 10rpx;
+  float: right;
+}
+
 .plot {
   border-left: 1px solid #000;
   padding: 10rpx;
   float: right;
+}
+
+.result {
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  padding: 10rpx;
+  margin-left: 15rpx;
+  margin-right: 15rpx;
 }
 
 /*show contrl*/
