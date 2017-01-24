@@ -10,6 +10,7 @@ var data = [];
 var data2 = [];
 var context;
 var origin;
+var lastInput = "";
 //draw line each point
 function draw(ctx, origin, srcdata, color) {
   if (color == undefined) {
@@ -71,6 +72,12 @@ function getPosition(e) {
   //console.log(e.touches[0].x,e.touches[0].y);
   //return [e.touches[0].x, e.touches[0].y];
   return [e.changedTouches[0].x, e.changedTouches[0].y];
+}
+
+function calc(input)
+{
+    var result = RPNer.parser(input);
+    return result;
 }
 
 Page({
@@ -220,20 +227,31 @@ Page({
     var input = this.data.inputString;
     if (input == "")
       return;
-    var result = RPNer.parser(input);
-    console.log(input + " = " + result);
-    this.setData({
-      resultStatus:"flex",
-      SolveResult: result
-    });
+    if (input != lastInput) {
+      lastInput = input;
+      var result = calc(input);
+      console.log(input + " = " + result);
+      this.setData({
+        resultStatus: "flex",
+        SolveResult: result
+      });
+    }
   },
   bindChange: function (e) {
     e.detail.value = util.trim(e.detail.value);
     if (e.detail.value == "")
       return;
-    this.setData({
-      inputString: e.detail.value
-    });
+    if (this.data.inputString != e.detail.value) {
+      lastInput = e.detail.value;
+      this.setData({
+        inputString: e.detail.value
+      });
+      var result = calc(e.detail.value);
+      this.setData({
+        resultStatus: "flex",
+        SolveResult: result
+      });
+    }
   },
   touchStart: function (e) {
     var pos = getPosition(e);
