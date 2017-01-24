@@ -218,6 +218,8 @@ Page({
   },
   onSolve: function (e) {
     var input = this.data.inputString;
+    if (input == "")
+      return;
     var result = RPNer.parser(input);
     console.log(input + " = " + result);
     this.setData({
@@ -227,6 +229,8 @@ Page({
   },
   bindChange: function (e) {
     e.detail.value = util.trim(e.detail.value);
+    if (e.detail.value == "")
+      return;
     this.setData({
       inputString: e.detail.value
     });
