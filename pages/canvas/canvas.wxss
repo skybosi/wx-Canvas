@@ -3,7 +3,7 @@
 .screen {
   height: 100%;
   width: 100%;
-  background: #fff;
+  background: #FFCC99;
   position: fixed;
   top: 0;
   left: 0;
@@ -27,6 +27,7 @@
 .inPutCtrl {
   display: flex;
   flex-direction: row;
+  align-items: center;
   border: 1px solid #000;
   margin-top: 10rpx;
   margin-left: 15rpx;
@@ -96,6 +97,6 @@
 }
 
 .wxcanvas {
-  border-left: 1px dashed #000;
-  border-right: 1px dashed #000;
+  border-left: 1px dashed #ff0000;
+  border-right: 1px dashed #ff0000;
 }

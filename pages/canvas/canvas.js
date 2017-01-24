@@ -74,10 +74,19 @@ function getPosition(e) {
   return [e.changedTouches[0].x, e.changedTouches[0].y];
 }
 
-function calc(input)
-{
-    var result = RPNer.parser(input);
-    return result;
+function calc(input) {
+  if (input != lastInput) {
+    lastInput = input;
+    if (input == "")
+      return;
+    if (input.indexOf("x") != -1 || input.indexOf("y") != -1 || input.indexOf("t") != -1) {
+      result = input;
+    } else {
+      result = RPNer.parser(input);
+    }
+  }
+  console.log(input + " = " + result);
+  return result;
 }
 
 Page({
@@ -116,7 +125,7 @@ Page({
       }
     })
     this.setData({
-      canvasWidth: W * 0.8
+      canvasWidth: W * 0.9
     });
     this.setData({
       canvasHeight: H * 0.8
@@ -225,33 +234,22 @@ Page({
   },
   onSolve: function (e) {
     var input = this.data.inputString;
-    if (input != lastInput) {
-      if (input == "")
-      return;
-      lastInput = input;
-      var result = calc(input);
-      console.log(input + " = " + result);
-      this.setData({
-        resultStatus: "flex",
-        SolveResult: result
-      });
-    }
+    var result = calc(input);
+    this.setData({
+      resultStatus: "flex",
+      SolveResult: result
+    });
   },
   bindChange: function (e) {
-    e.detail.value = util.trim(e.detail.value);
-    if (this.data.inputString != e.detail.value) {
-      if (e.detail.value == "")
-      return;
-      lastInput = e.detail.value;
-      this.setData({
-        inputString: e.detail.value
-      });
-      var result = calc(e.detail.value);
-      this.setData({
-        resultStatus: "flex",
-        SolveResult: result
-      });
-    }
+    var input = e.detail.value = util.trim(e.detail.value);
+    this.setData({
+      inputString: input
+    });
+    var result = calc(input);
+    this.setData({
+      resultStatus: "flex",
+      SolveResult: result
+    });
   },
   touchStart: function (e) {
     var pos = getPosition(e);
