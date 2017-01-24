@@ -225,9 +225,9 @@ Page({
   },
   onSolve: function (e) {
     var input = this.data.inputString;
-    if (input == "")
-      return;
     if (input != lastInput) {
+      if (input == "")
+      return;
       lastInput = input;
       var result = calc(input);
       console.log(input + " = " + result);
@@ -239,9 +239,9 @@ Page({
   },
   bindChange: function (e) {
     e.detail.value = util.trim(e.detail.value);
-    if (e.detail.value == "")
-      return;
     if (this.data.inputString != e.detail.value) {
+      if (e.detail.value == "")
+      return;
       lastInput = e.detail.value;
       this.setData({
         inputString: e.detail.value
