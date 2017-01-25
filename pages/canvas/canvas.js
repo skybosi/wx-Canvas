@@ -1,7 +1,7 @@
 var app = getApp();
 var util = require("../../utils/util.js");
 var Data = require("../../data/data.js");
-var RPNer = require("../../lib/expression.js");
+var Calcer = require("../../lib/expression.js");
 var cpuData = Data.data.cpu.slice();
 var timer = null;
 var ploted = false;
@@ -10,7 +10,6 @@ var data = [];
 var data2 = [];
 var context;
 var origin;
-var lastInput = "";
 //draw line each point
 function draw(ctx, origin, srcdata, color) {
   if (color == undefined) {
@@ -74,21 +73,6 @@ function getPosition(e) {
   return [e.changedTouches[0].x, e.changedTouches[0].y];
 }
 
-function calc(input) {
-  if (input != lastInput) {
-    lastInput = input;
-    if (input == "")
-      return;
-    if (input.indexOf("x") != -1 || input.indexOf("y") != -1 || input.indexOf("t") != -1) {
-      result = input;
-    } else {
-      result = RPNer.parser(input);
-    }
-  }
-  console.log(input + " = " + result);
-  return result;
-}
-
 Page({
   data: {
     canvasWidth: "0",
@@ -98,6 +82,8 @@ Page({
     inputString: "",
     SolveResult:"",
     canvasTouchPosition: "",
+    tipTop:"0",
+    tipLeft:"0",
     lastTapTime: '0',
     resultStatus:"none",
     canvasStatus: "none"
@@ -105,7 +91,7 @@ Page({
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
   },
-  onLoad: function () {
+  onLoad: function (e) {
     console.log("canvas is onload...")
     var W = 0;
     var H = 0;
@@ -234,18 +220,18 @@ Page({
   },
   onSolve: function (e) {
     var input = this.data.inputString;
-    var result = calc(input);
+    var result = Calcer.calc(input);
     this.setData({
       resultStatus: "flex",
       SolveResult: result
     });
   },
   bindChange: function (e) {
-    var input = e.detail.value = util.trim(e.detail.value);
+    var input = e.detail.value = util.trim(e.detail.value.toLowerCase());
     this.setData({
       inputString: input
     });
-    var result = calc(input);
+    var result = Calcer.calc(input);
     this.setData({
       resultStatus: "flex",
       SolveResult: result
@@ -254,7 +240,9 @@ Page({
   touchStart: function (e) {
     var pos = getPosition(e);
     this.setData({
-      canvasTouchPosition: " (x: " + pos[0] + ",y: " + pos[1] + ")"
+      canvasTouchPosition: " (x: " + pos[0] + ",y: " + pos[1] + ")",
+      tipLeft:pos[0],
+      tipTop:pos[1]
     });
     if (ploted) {
       moveArray.push(pos);
@@ -271,7 +259,9 @@ Page({
     }
     console.log("Touch Move... " + pos[0], pos[1]);
     this.setData({
-      canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1] + ")"
+      canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1] + ")",
+      tipLeft: pos[0],
+      tipTop: pos[1]
     });
     //console.log(e);
   },
