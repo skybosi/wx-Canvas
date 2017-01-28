@@ -80,13 +80,15 @@ Page({
     lazytime: "500",
     btctrl: "START",
     inputString: "",
+    inputHeight: "",
     SolveResult:"",
     canvasTouchPosition: "",
     tipTop:"0",
     tipLeft:"0",
     lastTapTime: '0',
     resultStatus:"none",
-    canvasStatus: "none"
+    canvasStatus: "none",
+    tipStatus:"none"
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
@@ -111,7 +113,9 @@ Page({
       }
     })
     this.setData({
-      canvasWidth: W * 0.9
+      inputHeight: H * 0.15,
+      canvasWidth: W * 0.9,
+      canvasHeight: H * 0.8
     });
     this.setData({
       canvasHeight: H * 0.8
@@ -146,21 +150,57 @@ Page({
     var cw = this.data.canvasWidth;
     var ch = this.data.canvasHeight;
     origin = [0, ch / 2];
-    for (var x = 0; x <= 30; x = x + 0.1) {
-      data.push([x, 3 * Math.sin(x)]);
+    // for (var x = 0; x <= 30; x = x + 0.1) {
+    //   data.push([x, 3 * Math.sin(x)]);
+    // }
+    // for (var x = 0; x <= 30; x = x + 0.1) {
+    //   data2.push([x, 2 * Math.cos(x)]);
+    // }
+    // util.selfAdapter(data, cw, ch);
+    // util.selfAdapter(data2, cw, ch);
+  },
+  onSolve: function (e) {
+    var input = this.data.inputString;
+    if (input.length == 0) {
+      this.setData({
+        resultStatus: "none",
+      });
+      return;
     }
-    for (var x = 0; x <= 30; x = x + 0.1) {
-      data2.push([x, 2 * Math.cos(x)]);
+    var result = Calcer.calc(input);
+    this.setData({
+      resultStatus: "flex",
+      SolveResult: result
+    });
+  },
+  bindChange: function (e) {
+    var input = e.detail.value = util.trim(e.detail.value.toLowerCase());
+    if (input.length == 0) {
+      this.setData({
+        resultStatus: "none",
+      });
+      return;
     }
-    util.selfAdapter(data, cw, ch);
-    util.selfAdapter(data2, cw, ch);
+    this.setData({
+      inputString: input
+    });
+    var result = Calcer.calc(input);
+    this.setData({
+      resultStatus: "flex",
+      SolveResult: result
+    });
   },
   onPlot: function () {
     this.setData({
       canvasStatus: "flex"
     });
+    var cw = this.data.canvasWidth;
+    var ch = this.data.canvasHeight;
+    var input = this.data.inputString;s
+    data = Calcer.calcs(input,[-5,5]);
+    util.selfAdapter(data, cw, ch);
     draw(context, origin, data, "#ff0000");
-    context.draw(true);
+    context.draw();
     ploted = true;
   },
   onLockCanvas: function (e) {
@@ -169,7 +209,17 @@ Page({
     if (lastTime > 0) {
       if (cutTime - lastTime < 300) {
         console.log("double click " + cutTime);
-        ploted = false;
+        if (ploted == true) {
+          ploted = false;
+          this.setData({
+            tipStatus: "flex"
+          });
+        } else {
+          ploted = true;
+          this.setData({
+            tipStatus: "none"
+          });
+        }
       } else {
         console.log("click " + cutTime);
       }
@@ -218,31 +268,12 @@ Page({
     }
     console.log("lazytime: " + this.data.lazytime);
   },
-  onSolve: function (e) {
-    var input = this.data.inputString;
-    var result = Calcer.calc(input);
-    this.setData({
-      resultStatus: "flex",
-      SolveResult: result
-    });
-  },
-  bindChange: function (e) {
-    var input = e.detail.value = util.trim(e.detail.value.toLowerCase());
-    this.setData({
-      inputString: input
-    });
-    var result = Calcer.calc(input);
-    this.setData({
-      resultStatus: "flex",
-      SolveResult: result
-    });
-  },
   touchStart: function (e) {
     var pos = getPosition(e);
     this.setData({
       canvasTouchPosition: " (x: " + pos[0] + ",y: " + pos[1] + ")",
       tipLeft:pos[0],
-      tipTop:pos[1]
+      tipTop:pos[1] + this.data.inputHeight + 98
     });
     if (ploted) {
       moveArray.push(pos);
@@ -257,11 +288,11 @@ Page({
       drag(data, moveArray);
       moveArray.shift();
     }
-    console.log("Touch Move... " + pos[0], pos[1]);
+    console.log("Touch Move... " + pos[0], pos[1],this.data.inputHeight);
     this.setData({
       canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1] + ")",
       tipLeft: pos[0],
-      tipTop: pos[1]
+      tipTop: pos[1] + this.data.inputHeight + 98
     });
     //console.log(e);
   },
@@ -275,5 +306,12 @@ Page({
       moveArray.length = 0;
     }
     console.log("Touch End... " + pos[0], pos[1]);
+  },
+  onShareAppMessage: function () {
+    return {
+      title: '自定义分享标题',
+      desc: '自定义分享描述',
+      path: '/page/user?id=123'
+    }
   }
 });

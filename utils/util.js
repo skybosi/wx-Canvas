@@ -39,13 +39,14 @@ function move(data,range) {
   }
 }
 function selfAdapter(data, stageW, stageH) {
-  var head = data[0];
+  var xrange = data.shift();
+  var yrange = data.shift();
   var tail = data[data.length - 1];
-  var scalex = stageW / (tail[0] - head[0]);
-  var scaley = scalex / 0.618;
+  var scalex = 0.7 * stageW/(xrange[1] - xrange[0]);
+  var scaley = 0.6 * stageH/(yrange[1] - yrange[0]);
   for (var i = 0; i < data.length; ++i) {
-    data[i][0] *= scalex;
-    data[i][1] *= scaley;
+    data[i][0] = stageW/2 + data[i][0] * scalex;
+    data[i][1] = stageH/2 - 200 - data[i][1] * scaley;
   }
 }
 function trim(str){

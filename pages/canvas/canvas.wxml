@@ -4,13 +4,15 @@
   </view>
   <view class="stageCtrl">
     <view class="inPutCtrl">
-      <view class="input">
+      <view class="input" style="height:{{inputHeight}}rpx">
         <input bindchange="bindChange" placeholder="|" focus="{{focus}}" />
       </view>
       <view class="solve" bindtap="onSolve">SOLVE</view>
       <view class="plot" bindtap="onPlot">PLOT</view>
     </view>
-    <view class = "result" style="display:{{resultStatus}}"><label>{{SolveResult}}</label></view>
+    <view class="result" style="display:{{resultStatus}}">
+      <label>{{SolveResult}}</label>
+    </view>
     <view class="showCtrl">
       <text class="plotCtrl" id="lazytime">T: {{lazytime}}</text>
       <view class="plotCtrl" bindtap="fastTimer">FAST</view>
@@ -20,7 +22,7 @@
 
   <!-- canvas.wxml -->
   <view class="canvas" style="display:{{canvasStatus}}">
-  <view class="tips" style="position:absolute;top:{{tipTop}}rpx;left:{{tipLeft}}rpx;">{{canvasTouchPosition}}</view>
+    <view class="tips" style="position:absolute;top:{{tipTop}}rpx;left:{{tipLeft}}rpx;display:{{tipStatus}}">{{canvasTouchPosition}}</view>
     <canvas class="wxcanvas" bindtap="onLockCanvas" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
   </view>
 </view>
