@@ -21,11 +21,14 @@ function draw(ctx, origin, srcdata, color) {
   //console.log("origin: " + origin);
   //console.log("srcdata: " + srcdata);
   //ctx.quadraticCurveTo(origin[0],origin[1],srcdata[0][0],srcdata[0][1]);
-  ctx.moveTo(origin[0] + srcdata[0][0], origin[1] + srcdata[0][1]);
+  if(!isNaN(srcdata[0][1]) && !isNaN(srcdata[0][0]))
+    ctx.moveTo(origin[0] + srcdata[0][0], origin[1] + srcdata[0][1]);
   var i = 0;
   for (; i < srcdata.length; i++) {
     //console.log(srcdata[i] + " " +srcdata[i][0] + " " + srcdata[i][1]);
     //ctx.quadraticCurveTo(origin[0]+srcdata[i][0],srcdata[i][1],origin[0]+srcdata[i+1][0],srcdata[i+1][1])
+    if(isNaN(srcdata[i][1]) || isNaN(srcdata[i][0]))
+      continue;
     ctx.lineTo(origin[0] + srcdata[i][0], origin[1] + srcdata[i][1]);
   }
   ctx.stroke();
