@@ -42,11 +42,12 @@ function selfAdapter(data, stageW, stageH) {
   var xrange = data.shift();
   var yrange = data.shift();
   var tail = data[data.length - 1];
-  var scalex = 0.7 * stageW/(xrange[1] - xrange[0]);
-  var scaley = 0.6 * stageH/(yrange[1] - yrange[0]);
+  var scalex = 0.8 * stageW / (xrange[1] - xrange[0]);
+  var scaley = 0.8 * stageH / (yrange[1] - yrange[0]);
+  var scale = Math.min(scalex, scaley);
   for (var i = 0; i < data.length; ++i) {
-    data[i][0] = stageW/2 + data[i][0] * scalex;
-    data[i][1] = stageH/2 - 200 - data[i][1] * scaley;
+    data[i][0] = stageW / 2 + data[i][0] * scale;
+    data[i][1] = stageH / 2 - 200 - data[i][1] * scale;
   }
 }
 function trim(str){

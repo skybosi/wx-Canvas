@@ -10,6 +10,8 @@ var data = [];
 var data2 = [];
 var context;
 var origin;
+var canvasW = 0;
+var canvasH = 0;
 //draw line each point
 function draw(ctx, origin, srcdata, color) {
   if (color == undefined) {
@@ -120,6 +122,8 @@ Page({
     this.setData({
       canvasHeight: H * 0.8
     });
+    canvasW = this.data.canvasWidth;
+    canvasH = this.data.canvasHeight;
     /*
     var context = wx.createContext();
     var gridW = Math.ceil(W / 30);
@@ -147,17 +151,15 @@ Page({
     //context = wx.createContext();
     context = wx.createCanvasContext('firstCanvas');
     context.setStrokeStyle("rgba(0,255,0)");
-    var cw = this.data.canvasWidth;
-    var ch = this.data.canvasHeight;
-    origin = [0, ch / 2];
+    origin = [0, canvasH / 2];
     // for (var x = 0; x <= 30; x = x + 0.1) {
     //   data.push([x, 3 * Math.sin(x)]);
     // }
     // for (var x = 0; x <= 30; x = x + 0.1) {
     //   data2.push([x, 2 * Math.cos(x)]);
     // }
-    // util.selfAdapter(data, cw, ch);
-    // util.selfAdapter(data2, cw, ch);
+    // util.selfAdapter(data, canvasW, canvasH);
+    // util.selfAdapter(data2, canvasW, canvasH);
   },
   onSolve: function (e) {
     var input = this.data.inputString;
@@ -194,11 +196,10 @@ Page({
     this.setData({
       canvasStatus: "flex"
     });
-    var cw = this.data.canvasWidth;
-    var ch = this.data.canvasHeight;
-    var input = this.data.inputString;s
+    var input = this.data.inputString;
+    data.length = 0;
     data = Calcer.calcs(input,[-5,5]);
-    util.selfAdapter(data, cw, ch);
+    util.selfAdapter(data, canvasW, canvasH);
     draw(context, origin, data, "#ff0000");
     context.draw();
     ploted = true;
