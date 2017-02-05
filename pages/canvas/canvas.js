@@ -9,34 +9,34 @@ var moveArray = [];
 var data = [];
 var data2 = [];
 var context;
-var origin;
+var origin = [0,0];
 var canvasW = 0;
 var canvasH = 0;
+var oldcolor;
 //draw line each point
-function draw(ctx, origin, srcdata, color) {
+function draw(ctx,srcdata, color) {
   if (color == undefined) {
-    color = "black";
+    //color = "black";
+    color = oldcolor;
   }
+  //clearbrushColor(ctx);
   ctx.setStrokeStyle(color);
-  //console.log("origin: " + origin);
+  oldcolor = color;
   //console.log("srcdata: " + srcdata);
-  //ctx.quadraticCurveTo(origin[0],origin[1],srcdata[0][0],srcdata[0][1]);
   if(!isNaN(srcdata[0][1]) && !isNaN(srcdata[0][0]))
-    ctx.moveTo(origin[0] + srcdata[0][0], origin[1] + srcdata[0][1]);
-  var i = 0;
-  for (; i < srcdata.length; i++) {
+   ctx.moveTo(srcdata[0][0],srcdata[0][1]);
+  for (var i = 0; i < srcdata.length; i++) {
     //console.log(srcdata[i] + " " +srcdata[i][0] + " " + srcdata[i][1]);
-    //ctx.quadraticCurveTo(origin[0]+srcdata[i][0],srcdata[i][1],origin[0]+srcdata[i+1][0],srcdata[i+1][1])
     if(isNaN(srcdata[i][1]) || isNaN(srcdata[i][0]))
       continue;
-    ctx.lineTo(origin[0] + srcdata[i][0], origin[1] + srcdata[i][1]);
+    ctx.lineTo(srcdata[i][0], srcdata[i][1]);
   }
   ctx.stroke();
   //console.log(ctx);
 }
 
-function update(ctx, origin, srcdata, color) {
-  draw(ctx, origin, srcdata, color);
+function update(ctx, srcdata, color) {
+  draw(ctx, srcdata, color);
   util.move(srcdata);
   ctx.stroke();
 }
@@ -49,9 +49,50 @@ function drag(srcdata, moveArray) {
     console.log(m);
     util.move(srcdata, m);
     //moveArray.length = 0;
-    draw(context, origin, srcdata);
+    //var oldcolor = getbrushColor(context);
+    draw(context, srcdata, oldcolor);
     context.draw();
   }
+}
+
+function clearbrushColor(context) {
+  var actions = context.actions;
+  var len = actions.length;
+  for (var i = 0; i < len; ++i) {
+    if (actions[i].method == "setStrokeStyle") {
+      actions.splice(i, 1);
+      i = -1;
+      len--;
+    }
+  }
+}
+
+function getbrushColor(context) {
+  var actions = context.actions;
+  var len = actions.length;
+  for (var i = len - 1; i >= 0; --i) {
+    if (actions[i].method == "setStrokeStyle") {
+      return actions[i].data[1];
+    }
+  }
+}
+
+function grid(context, origin) {
+  //clearbrushColor(context);
+  context.setStrokeStyle("#000000");
+  var gridW = Math.ceil(canvasW / 30);
+  var gridH = Math.ceil(canvasH / 30);
+  //横线
+  for (var x = 0; x < 30; ++x) {
+    context.moveTo(0, x * gridH);
+    context.lineTo(canvasW, x * gridH);
+  }
+  //纵线
+  for (var y = 0; y < 30; ++y) {
+    context.moveTo(y * gridW, 0);
+    context.lineTo(y * gridW, canvasH);
+  }
+  context.stroke();
 }
 
 function example(ctx) {
@@ -127,42 +168,13 @@ Page({
     });
     canvasW = this.data.canvasWidth;
     canvasH = this.data.canvasHeight;
-    /*
-    var context = wx.createContext();
-    var gridW = Math.ceil(W / 30);
-    var gridH = Math.ceil(H / 30);
-    //横线
-    for (var x = 0; x < 30; ++x) {
-      context.moveTo(0, x * gridH);
-      context.lineTo(W, x * gridH);
-    }
-    //纵线
-    for (var y = 0; y < 30; ++y) {
-      context.moveTo(y * gridW, 0);
-      context.lineTo(y * gridW, H);
-    }
-    context.stroke();
-    wx.drawCanvas({
-      canvasId: 'firstCanvas',
-      actions: context.getActions() //获取绘图动作数组
-    });
-    */
   },
   onReady: function (e) {
     console.log("canvas is ready...")
     //使用wx.createContext获取绘图上下文context
-    //context = wx.createContext();
     context = wx.createCanvasContext('firstCanvas');
     context.setStrokeStyle("rgba(0,255,0)");
-    origin = [0, canvasH / 2];
-    // for (var x = 0; x <= 30; x = x + 0.1) {
-    //   data.push([x, 3 * Math.sin(x)]);
-    // }
-    // for (var x = 0; x <= 30; x = x + 0.1) {
-    //   data2.push([x, 2 * Math.cos(x)]);
-    // }
-    // util.selfAdapter(data, canvasW, canvasH);
-    // util.selfAdapter(data2, canvasW, canvasH);
+    origin = [canvasW / 2, canvasH / 2];
   },
   onSolve: function (e) {
     var input = this.data.inputString;
@@ -202,8 +214,10 @@ Page({
     var input = this.data.inputString;
     data.length = 0;
     data = Calcer.calcs(input,[-5,5]);
-    util.selfAdapter(data, canvasW, canvasH);
-    draw(context, origin, data, "#ff0000");
+    util.selfAdapter(data,origin,canvasW, canvasH);
+    draw(context, data, "#ff0000");
+    context.draw();
+    grid(context,origin);
     context.draw();
     ploted = true;
   },
@@ -243,9 +257,9 @@ Page({
       });
       context.clearActions();
       timer = setInterval(function () {
-        update(context, origin, data, "#ff0000");
+        update(context, data, "#ff0000");
         context.draw(false);
-        update(context, origin, data2, "#ff00ff");
+        update(context, data2, "#ff00ff");
         context.draw(true);
         //调用wx.drawCanvas，通过canvasId指定在哪张画布上绘制，通过actions指定绘制行为       
       }, this.data.lazytime);
