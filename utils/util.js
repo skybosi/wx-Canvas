@@ -39,17 +39,19 @@ function move(data,range) {
   }
 }
 function selfAdapter(data, center, stageW, stageH) {
+  if (! data instanceof Array)
+    return data;
   var xrange = data.shift();
   var yrange = data.shift();
   var tail = data[data.length - 1];
   var scalex = 0.8 * stageW / (xrange[1] - xrange[0]);
   var scaley = 0.8 * stageH / (yrange[1] - yrange[0]);
-  var scale = Math.min(scalex, scaley);
-
+  var scale = Math.max(scalex, scaley);
   for (var i = 0; i < data.length; ++i) {
-    data[i][0] = center[0] + data[i][0] * scale;
-    data[i][1] = center[1] - data[i][1] * scale ;
+    data[i][0] = center[0] + data[i][0] * scalex;
+    data[i][1] = center[1] - data[i][1] * scalex;
   }
+  return scalex;
 }
 function trim(str){
 	return str.replace(/\s|\xA0/g,"");

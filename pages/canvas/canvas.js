@@ -85,7 +85,8 @@ function getbrushColor(context) {
 
 function grid(context, origin) {
   //clearbrushColor(context);
-  context.setStrokeStyle("#000000");
+  context.beginPath();
+  context.setStrokeStyle("#808080");
   context.lineWidth="1"
   var gridW = Math.ceil(canvasW / 30);
   var gridH = Math.ceil(canvasH / 30);
@@ -99,6 +100,18 @@ function grid(context, origin) {
     context.moveTo(y * gridW, 0);
     context.lineTo(y * gridW, canvasH);
   }
+  context.closePath();
+  context.stroke();
+  //x-aix
+  context.beginPath();
+  context.setStrokeStyle("#000000");
+  context.lineWidth="2"
+  context.moveTo(0, origin[1]);
+  context.lineTo(canvasW, origin[1]);
+  //y-aix
+  context.moveTo(origin[0], 0);
+  context.lineTo(origin[0], canvasH);
+  context.closePath();
   context.stroke();
 }
 
@@ -219,11 +232,16 @@ Page({
       canvasStatus: "flex"
     });
     var input = this.data.inputString;
-    data.length = 0;
+    if (data instanceof Array)
+      data.length = 0;
     context.beginPath();
-    data = Calcer.calcs(input,[-5,5]);
+    data = Calcer.calcs(input,[-5,10]);
     util.selfAdapter(data,origin,canvasW, canvasH);
     draw(context, data, "#ff0000");
+    if (gridSwitch) {
+      context.beginPath();
+      grid(context, origin);
+    }
     context.draw();
     ploted = true;
   },
@@ -240,6 +258,7 @@ Page({
           });
         } else {
           ploted = true;
+          moveArray.length = 0;
           this.setData({
             tipStatus: "none"
           });
