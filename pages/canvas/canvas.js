@@ -13,6 +13,7 @@ var origin = [0,0];
 var canvasW = 0;
 var canvasH = 0;
 var oldcolor;
+var gridSwitch = false;
 //draw line each point
 function draw(ctx,srcdata, color) {
   if (color == undefined) {
@@ -50,7 +51,12 @@ function drag(srcdata, moveArray) {
     util.move(srcdata, m);
     //moveArray.length = 0;
     //var oldcolor = getbrushColor(context);
+    context.beginPath();
     draw(context, srcdata, oldcolor);
+    if (gridSwitch) {
+      context.beginPath();
+      grid(context, origin);
+    }
     context.draw();
   }
 }
@@ -80,6 +86,7 @@ function getbrushColor(context) {
 function grid(context, origin) {
   //clearbrushColor(context);
   context.setStrokeStyle("#000000");
+  context.lineWidth="1"
   var gridW = Math.ceil(canvasW / 30);
   var gridH = Math.ceil(canvasH / 30);
   //横线
@@ -213,11 +220,10 @@ Page({
     });
     var input = this.data.inputString;
     data.length = 0;
+    context.beginPath();
     data = Calcer.calcs(input,[-5,5]);
     util.selfAdapter(data,origin,canvasW, canvasH);
     draw(context, data, "#ff0000");
-    context.draw();
-    grid(context,origin);
     context.draw();
     ploted = true;
   },
@@ -330,6 +336,19 @@ Page({
       title: '自定义分享标题',
       desc: '自定义分享描述',
       path: '/page/user?id=123'
+    }
+  },
+  gridSwitch: function () {
+    gridSwitch = !gridSwitch;
+    if (gridSwitch) {
+      context.beginPath();
+      grid(context, origin);
+      context.draw(true);
+    }else{
+      context.clearRect(0,0,canvasW,canvasH);
+      context.beginPath();
+      draw(context, data, oldcolor);
+      context.draw();
     }
   }
 });

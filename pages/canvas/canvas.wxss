@@ -55,13 +55,22 @@
   float: right;
 }
 
-.result {
+.resultCtrl {
+  display: flex;
+  flex-direction: row;
   border-bottom: 1px solid #000;
   border-left: 1px solid #000;
   border-right: 1px solid #000;
   padding: 10rpx;
   margin-left: 15rpx;
   margin-right: 15rpx;
+}
+.result{
+  width: 100%;
+  padding: 10rpx;
+}
+.gridoff{
+  float: right
 }
 
 /*show contrl*/

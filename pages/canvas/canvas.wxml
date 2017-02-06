@@ -10,8 +10,13 @@
       <view class="solve" bindtap="onSolve">SOLVE</view>
       <view class="plot" bindtap="onPlot">PLOT</view>
     </view>
-    <view class="result" style="display:{{resultStatus}}">
-      <label>{{SolveResult}}</label>
+    <view class="resultCtrl" style="display:{{resultStatus}}">
+      <view class="result">
+        <label>{{SolveResult}}</label>
+      </view>
+      <view class="gridoff">
+        <switch type="switch" bindchange="gridSwitch" />
+      </view>
     </view>
     <view class="showCtrl">
       <text class="plotCtrl" id="lazytime">T: {{lazytime}}</text>

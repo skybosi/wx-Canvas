@@ -1,8 +1,8 @@
 {
   "pages":[
+    "pages/canvas/canvas",
     "pages/index/index",
-    "pages/logs/logs",
-    "pages/canvas/canvas"
+    "pages/logs/logs"
   ],
   "window":{
     "backgroundTextStyle":"light",
