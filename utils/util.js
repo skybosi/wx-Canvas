@@ -43,10 +43,14 @@ function selfAdapter(data, center, stageW, stageH) {
     return data;
   var xrange = data.shift();
   var yrange = data.shift();
+  var head = data[0];
   var tail = data[data.length - 1];
   var scalex = 0.8 * stageW / (xrange[1] - xrange[0]);
   var scaley = 0.8 * stageH / (yrange[1] - yrange[0]);
   var scale = Math.max(scalex, scaley);
+  //get middle of valid x-range and reset origin point
+  //center[0] -= (xrange[0] + xrange[1])*scalex/2;  //is error
+  center[0] -= (head[0] + tail[0])*scalex/2;
   for (var i = 0; i < data.length; ++i) {
     data[i][0] = center[0] + data[i][0] * scalex;
     data[i][1] = center[1] - data[i][1] * scalex;

@@ -236,6 +236,7 @@ Page({
       data.length = 0;
     context.beginPath();
     data = Calcer.calcs(input,[-5,10]);
+    origin = [canvasW / 2, canvasH / 2];
     util.selfAdapter(data,origin,canvasW, canvasH);
     draw(context, data, "#ff0000");
     if (gridSwitch) {
