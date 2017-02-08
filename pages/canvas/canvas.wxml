@@ -28,6 +28,6 @@
   <!-- canvas.wxml -->
   <view class="canvas" style="display:{{canvasStatus}}">
     <view class="tips" style="position:absolute;top:{{tipTop}}rpx;left:{{tipLeft}}rpx;display:{{tipStatus}}">{{canvasTouchPosition}}</view>
-    <canvas class="wxcanvas" bindtap="onLockCanvas" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
+    <canvas class="wxcanvas" bindtap="onLockCanvas" bindlongtap="longTap" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
   </view>
 </view>

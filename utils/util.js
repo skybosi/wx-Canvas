@@ -52,6 +52,7 @@ function selfAdapter(data, center, stageW, stageH) {
   //center[0] -= (xrange[0] + xrange[1])*scalex/2;  //is error
   center[0] -= (head[0] + tail[0])*scalex/2;
   for (var i = 0; i < data.length; ++i) {
+    data[i].push([data[i][0],data[i][1]]);
     data[i][0] = center[0] + data[i][0] * scalex;
     data[i][1] = center[1] - data[i][1] * scalex;
   }
@@ -60,10 +61,14 @@ function selfAdapter(data, center, stageW, stageH) {
 function trim(str){
 	return str.replace(/\s|\xA0/g,"");
 }
+function toString(point){
+  return point[0].toFixed(3) + ", "+ point[1].toFixed(1)// + point[2];
+}
 module.exports = {
   formatTime: formatTime,
   readData: readData,
   move: move,
   selfAdapter: selfAdapter,
-  trim:trim
+  trim:trim,
+  toString:toString
 }
