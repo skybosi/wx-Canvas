@@ -82,20 +82,25 @@ function coordSys(ctx, originpoint) {
   //origin point
   ctx.setFontSize(13)
   ctx.setFillStyle("black");
-  //ctx.fillText("O",originpoint[0]+3,originpoint[1]-3)
+  //ctx.fillText("O",originpoint[0]+3,originpoint[1]-3)  
+  var xunit = data[10][0] - data[0][0];
+  var dealt = data[10][2][0] - data[0][2][0]
+  var xpos = data[0][0];
+  var ypos = origin[1];
+  var xrealpos = data[0][2][0];
+  while (xpos <= canvasW) {
+    ctx.fillText("" + xrealpos, xpos - 6.5, canvasH - 13);
+    xrealpos += dealt
+    xpos += xunit;
+  }
   /*
-  var xunit = data[9][0] - data[0][0];
-  var i = 0;
-  while (xunit*i < canvasW) {
-    ctx.fillText(""+data[i][2][0],data[i][0]-3,canvasH-13);
-    i+=10;
-  }*/
   for (var i = 0; i < data.length; ++i) {
     if (i % 10 == 0) {
       ctx.fillText("" + data[i][2][0], data[i][0] - 6.5, canvasH - 13);
       //ctx.fillText(""+data[i][2][0],13,data[i][0]+originpoint[1]/2);
     }
   }
+  */
   ctx.stroke();
   ctx.restore();
 }
@@ -161,13 +166,13 @@ function trace(ctx, position) {
   // ctx.closePath()
   // ctx.stroke();
   ctx.beginPath();
-  ctx.setStrokeStyle("#00FF00");
+  ctx.setFillStyle(oldcolor);
   ctx.setLineWidth(1);
   //join is current touch point and math function image join point
   var join = (position[0] - origin[0]) / scale;
   var calcData = Calcer.calcs(input, [join, join]);
   ctx.arc(position[0], origin[1] - calcData * scale, 3, 0, 2 * Math.PI);
-  ctx.stroke();
+  ctx.fill();
   ctx.draw();
   return [join, calcData];
 }
@@ -358,10 +363,10 @@ Page({
       moveArray.push(pos);
     } else {
       draw(context, data, oldcolor);
-      grid(context, origin);
+      if (gridSwitch) { grid(context, origin); }
       var realpos = trace(context, pos);
       this.setData({
-        canvasTouchPosition: " (x: " + realpos[0].toFixed(2) + ",y: " + realpos[1].toFixed(2) + ")",
+        canvasTouchPosition: "x: " + realpos[0].toFixed(2) + " y: " + realpos[1].toFixed(2),
         tipLeft: pos[0],
         tipTop: pos[1] + this.data.inputHeight + 98
       });
@@ -376,20 +381,15 @@ Page({
       moveArray.shift();
     } else {
       draw(context, data, oldcolor);
-      grid(context, origin);
+      if (gridSwitch) { grid(context, origin); }
       var realpos = trace(context, pos);
       this.setData({
-        canvasTouchPosition: " (x: " + realpos[0].toFixed(2) + ",y: " + realpos[1].toFixed(2) + ")",
+        canvasTouchPosition: "x: " + realpos[0].toFixed(2) + " y: " + realpos[1].toFixed(2),
         tipLeft: pos[0],
         tipTop: pos[1] + this.data.inputHeight + 98
       });
     }
     //console.log("Touch Move... " + pos[0], pos[1], this.data.inputHeight);
-    // this.setData({
-    //   canvasTouchPosition: " (x: " + pos[0] + ", y: " + pos[1] + ")",
-    //   tipLeft: pos[0],
-    //   tipTop: pos[1] + this.data.inputHeight + 98
-    // });
     //console.log(e);
   },
   longTap: function (e) {
