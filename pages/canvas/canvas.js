@@ -10,13 +10,14 @@ var moveArray = [];
 var data = [];
 var data2 = [];
 var context;
-var origin = [0, 0, [0, 0]];
+var origin = [0, 0];
 var canvasW = 0;
 var canvasH = 0;
 var oldcolor;
 var gridSwitch = false;
 var input = "";
 var scale = 1.0;
+var unit = 1
 //draw line each point
 function draw(ctx, srcdata, color) {
   if (color == undefined) {
@@ -54,20 +55,60 @@ function drag(srcdata, moveArray) {
       moveArray[0][1] - moveArray[moveArray.length - 1][1]];
     //console.log(m);
     util.move(srcdata, m);
-    //moveArray.length = 0;
-    //var oldcolor = getbrushColor(context);
-    draw(context, srcdata, oldcolor);
+    //moveArray.length = 0; 
     origin[0] -= m[0]
     origin[1] -= m[1]
     if (gridSwitch) {
       grid(context, origin);
     }
+    draw(context, srcdata, oldcolor);
     context.draw();
   }
 }
 
 //coordinate system; frame of axes;
-function coordSys(ctx, originpoint) {
+function grid(ctx, originpoint) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.setStrokeStyle("gray");
+  ctx.setLineWidth(1);
+  //origin point
+  ctx.setFontSize(13)
+  ctx.setFillStyle("black");
+
+  var rdx = data[2][2][0] - data[0][2][0];
+  var dx = data[2][0] - data[0][0]
+  var xunit = Math.abs(unit * dx / rdx);
+
+  var rdy = data[2][2][1] - data[0][2][1];
+  var dy = data[2][1] - data[0][1]
+  var yunit = Math.abs(unit * dy / rdy)
+
+  //x-axes
+  var sx = Math.abs(originpoint[0] - parseInt(originpoint[0] / xunit) * xunit);
+  var rsx = -parseInt(originpoint[0] / xunit);
+  var i = 0
+  while (sx < canvasW) {
+    rsx += unit
+    sx += xunit;
+    ctx.moveTo(sx, 0);
+    ctx.lineTo(sx, canvasH);
+    ctx.fillText("" + rsx, sx - 6.5, canvasH - 13);
+  }
+  //y-axes
+  i = 0;
+  var sy = Math.abs(originpoint[1] - parseInt(originpoint[1] / yunit) * yunit);
+  var rsy = parseInt(originpoint[1] / yunit);
+  while (sy < canvasH) {
+    ctx.moveTo(0, sy);
+    ctx.lineTo(canvasW, sy);
+    ctx.fillText("" + rsy, 9, sy + 6);
+    rsy -= unit
+    sy += yunit;
+  }
+  ctx.stroke();
+  ctx.restore();
+
   ctx.save();
   ctx.beginPath();
   //x-axes
@@ -79,53 +120,8 @@ function coordSys(ctx, originpoint) {
   ctx.moveTo(originpoint[0], 0);
   ctx.lineTo(originpoint[0], canvasH);
   ctx.closePath()
-  //origin point
-  ctx.setFontSize(13)
-  ctx.setFillStyle("black");
-  //ctx.fillText("O",originpoint[0]+3,originpoint[1]-3)  
-  var xunit = data[10][0] - data[0][0];
-  var dealt = data[10][2][0] - data[0][2][0]
-  var xpos = data[0][0];
-  var ypos = origin[1];
-  var xrealpos = data[0][2][0];
-  while (xpos <= canvasW) {
-    ctx.fillText("" + xrealpos, xpos - 6.5, canvasH - 13);
-    xrealpos += dealt
-    xpos += xunit;
-  }
-  /*
-  for (var i = 0; i < data.length; ++i) {
-    if (i % 10 == 0) {
-      ctx.fillText("" + data[i][2][0], data[i][0] - 6.5, canvasH - 13);
-      //ctx.fillText(""+data[i][2][0],13,data[i][0]+originpoint[1]/2);
-    }
-  }
-  */
   ctx.stroke();
   ctx.restore();
-}
-
-function grid(ctx, originpoint) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.setStrokeStyle("gray");
-  ctx.setLineWidth(0.5);
-  var gridW = Math.ceil(canvasW / 30);
-  var gridH = Math.ceil(canvasH / 30);
-  //横线
-  for (var x = 0; x < 30; ++x) {
-    ctx.moveTo(0, x * gridH);
-    ctx.lineTo(canvasW, x * gridH);
-  }
-  //纵线
-  for (var y = 0; y < 30; ++y) {
-    ctx.moveTo(y * gridW, 0);
-    ctx.lineTo(y * gridW, canvasH);
-  }
-  ctx.closePath();
-  ctx.stroke();
-  ctx.restore();
-  coordSys(ctx, originpoint);
 }
 
 function example(ctx) {
@@ -232,7 +228,7 @@ Page({
     //使用wx.createContext获取绘图上下文context
     context = wx.createCanvasContext('firstCanvas');
     context.setStrokeStyle("rgba(0,255,0)");
-    [origin[0], origin[0]] = [canvasW / 2, canvasH / 2];
+    origin = [canvasW / 2, canvasH / 2];
   },
   onSolve: function (e) {
     input = this.data.inputString;
@@ -272,13 +268,13 @@ Page({
     input = this.data.inputString;
     if (data instanceof Array)
       data.length = 0;
-    data = Calcer.calcs(input, [-5, 10]);
-    [origin[0], origin[1]] = [canvasW / 2, canvasH / 2];
+    data = Calcer.calcs(input, [-5, 5]);
+    origin = [canvasW / 2, canvasH / 2];
     scale = util.selfAdapter(data, origin, canvasW, canvasH);
-    draw(context, data, "#ff0000");
     if (gridSwitch) {
       grid(context, origin);
     }
+    draw(context, data, "#ff0000");
     context.draw();
     ploted = true;
   },
