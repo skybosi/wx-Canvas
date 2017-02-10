@@ -27,6 +27,7 @@ function draw(ctx, srcdata, color) {
   ctx.save();
   ctx.beginPath();
   ctx.setStrokeStyle(color);
+  ctx.setLineWidth(2);
   oldcolor = color;
   //console.log("srcdata: " + srcdata);
   if (!isNaN(srcdata[0][1]) && !isNaN(srcdata[0][0]))
@@ -83,6 +84,7 @@ function grid(ctx, originpoint) {
   var rdy = data[2][2][1] - data[0][2][1];
   var dy = data[2][1] - data[0][1]
   var yunit = Math.abs(unit * dy / rdy)
+  if(isNaN(yunit)){ yunit = xunit};
 
   //x-axes
   var sx = Math.abs(originpoint[0] - parseInt(originpoint[0] / xunit) * xunit);
@@ -98,7 +100,9 @@ function grid(ctx, originpoint) {
   //y-axes
   i = 0;
   var sy = Math.abs(originpoint[1] - parseInt(originpoint[1] / yunit) * yunit);
+  if(isNaN(sy)){sy = sx}
   var rsy = parseInt(originpoint[1] / yunit);
+  if(isNaN(rsy)){rsy = rsx}
   while (sy < canvasH) {
     ctx.moveTo(0, sy);
     ctx.lineTo(canvasW, sy);
@@ -271,10 +275,10 @@ Page({
     data = Calcer.calcs(input, [-5, 5]);
     origin = [canvasW / 2, canvasH / 2];
     scale = util.selfAdapter(data, origin, canvasW, canvasH);
+    draw(context, data, "#ff0000");
     if (gridSwitch) {
       grid(context, origin);
-    }
-    draw(context, data, "#ff0000");
+    }    
     context.draw();
     ploted = true;
   },
