@@ -29,13 +29,20 @@ function draw(ctx, srcdata, color) {
   ctx.setStrokeStyle(color);
   ctx.setLineWidth(2);
   oldcolor = color;
+  var nan = false;
   //console.log("srcdata: " + srcdata);
   if (!isNaN(srcdata[0][1]) && !isNaN(srcdata[0][0]))
     ctx.moveTo(srcdata[0][0], srcdata[0][1]);
   for (var i = 0; i < srcdata.length; i++) {
     //console.log(srcdata[i] + " " +srcdata[i][0] + " " + srcdata[i][1]);
-    if (isNaN(srcdata[i][1]) || isNaN(srcdata[i][0]))
+    if (isNaN(srcdata[i][1]) || isNaN(srcdata[i][0])) {
+      nan = true;
       continue;
+    }
+    if (nan == true) {
+      ctx.moveTo(srcdata[i][0], srcdata[i][1]);
+      nan = false;
+    }
     ctx.lineTo(srcdata[i][0], srcdata[i][1]);
   }
   ctx.stroke();
@@ -84,7 +91,7 @@ function grid(ctx, originpoint) {
   var rdy = data[2][2][1] - data[0][2][1];
   var dy = data[2][1] - data[0][1]
   var yunit = Math.abs(unit * dy / rdy)
-  if(isNaN(yunit)){ yunit = xunit};
+  if (isNaN(yunit)) { yunit = xunit };
 
   //x-axes
   var sx = Math.abs(originpoint[0] - parseInt(originpoint[0] / xunit) * xunit);
@@ -100,9 +107,9 @@ function grid(ctx, originpoint) {
   //y-axes
   i = 0;
   var sy = Math.abs(originpoint[1] - parseInt(originpoint[1] / yunit) * yunit);
-  if(isNaN(sy)){sy = sx}
+  if (isNaN(sy)) { sy = sx }
   var rsy = parseInt(originpoint[1] / yunit);
-  if(isNaN(rsy)){rsy = rsx}
+  if (isNaN(rsy)) { rsy = rsx }
   while (sy < canvasH) {
     ctx.moveTo(0, sy);
     ctx.lineTo(canvasW, sy);
@@ -171,6 +178,7 @@ function trace(ctx, position) {
   //join is current touch point and math function image join point
   var join = (position[0] - origin[0]) / scale;
   var calcData = Calcer.calcs(input, [join, join]);
+  //maybe return NaN, if NaN will show NaN and draw a point top of canvas
   ctx.arc(position[0], origin[1] - calcData * scale, 3, 0, 2 * Math.PI);
   ctx.fill();
   ctx.draw();
@@ -278,7 +286,7 @@ Page({
     draw(context, data, "#ff0000");
     if (gridSwitch) {
       grid(context, origin);
-    }    
+    }
     context.draw();
     ploted = true;
   },
