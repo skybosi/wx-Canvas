@@ -9,3 +9,7 @@ This is example canvas show!
 This is example drag canvas show!
 
 ![drag](./doc/drag.gif)
+
+This is example grid-trace-drag canvas show!
+
+![gtd](./doc/grid-trace-drag.gif)
