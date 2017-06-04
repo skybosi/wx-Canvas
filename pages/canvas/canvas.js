@@ -247,6 +247,7 @@ Page({
     if (input.length == 0) {
       this.setData({
         resultStatus: "none",
+        inputString: ""
       });
       return;
     }
@@ -261,7 +262,10 @@ Page({
     if (input.length == 0) {
       this.setData({
         resultStatus: "none",
+        inputString: ""
       });
+      context.clearRect(0, 0, canvasW, canvasH);
+      context.draw();
       return;
     }
     this.setData({
@@ -278,17 +282,19 @@ Page({
       canvasStatus: "flex"
     });
     input = this.data.inputString;
-    if (data instanceof Array)
-      data.length = 0;
-    data = Calcer.calcs(input, [-5, 5]);
-    origin = [canvasW / 2, canvasH / 2];
-    scale = util.selfAdapter(data, origin, canvasW, canvasH);
-    draw(context, data, "#ff0000");
-    if (gridSwitch) {
-      grid(context, origin);
+    if("" != input){
+      if (data instanceof Array)
+        data.length = 0;
+      data = Calcer.calcs(input, [-5, 5]);
+      origin = [canvasW / 2, canvasH / 2];
+      scale = util.selfAdapter(data, origin, canvasW, canvasH);
+      draw(context, data, "#ff0000");
+      if (gridSwitch) {
+        grid(context, origin);
+      }
+      context.draw();
+      ploted = true;
     }
-    context.draw();
-    ploted = true;
   },
   onLockCanvas: function (e) {
     var curTime = e.timeStamp;
