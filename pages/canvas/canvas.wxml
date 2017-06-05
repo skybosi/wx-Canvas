@@ -5,11 +5,18 @@
   <view class="stageCtrl">
     <view class="inPutCtrl">
       <view class="input" style="height:{{inputHeight}}rpx">
-        <input bindchange="bindChange" placeholder="|" focus="{{focus}}" />
+        <input bindinput="bindinput" placeholder="|" value="{{inputString}}" focus="{{focus}}" />
       </view>
       <view class="solve" bindtap="onSolve">SOLVE</view>
       <view class="plot" bindtap="onPlot">PLOT</view>
     </view>
+    <scroll-view scroll-y="true" class="scrollview">
+      <view wx:for="{{bindSource}}">
+        <view id="{{item}}" bindtap="itemtap" class="itemview">
+          {{item}}
+        </view>
+      </view>
+    </scroll-view>
     <view class="resultCtrl" style="display:{{resultStatus}}">
       <view class="result">
         <label>{{SolveResult}}</label>

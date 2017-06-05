@@ -3,7 +3,7 @@
 .screen {
   height: 100%;
   width: 100%;
-  background: #FFCC99;
+  background: #fc9;
   position: fixed;
   top: 0;
   left: 0;
@@ -65,12 +65,34 @@
   margin-left: 15rpx;
   margin-right: 15rpx;
 }
-.result{
+
+.result {
   width: 100%;
   padding: 10rpx;
 }
-.gridoff{
-  float: right
+
+.gridoff {
+  float: right;
+}
+
+.scrollview {
+  width: 60%;
+  height: 60%;
+  position: absolute;
+  float: left;
+  padding: 10rpx;
+  margin-left: 15rpx;
+  margin-right: 15rpx;
+}
+
+.itemview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bolder;
+  font-size: smaller;
+  white-space: nowrap;
+  padding: 20rpx 20rpx 20rpx 20rpx;
+  border-bottom: 1px solid #b1b1b1;
 }
 
 /*show contrl*/
@@ -107,12 +129,14 @@
   margin-left: 15rpx;
   margin-right: 15rpx;
 }
-.tips{
+
+.tips {
   border: 1px solid #000;
-  background: #cc6600;
+  background: #c60;
   padding: 4rpx;
 }
+
 .wxcanvas {
-  border-left: 1px dashed #ff0000;
-  border-right: 1px dashed #ff0000;
+  border-left: 1px dashed #f00;
+  border-right: 1px dashed #f00;
 }

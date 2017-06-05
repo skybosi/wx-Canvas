@@ -200,7 +200,10 @@ Page({
     lastTapTime: '0',
     resultStatus: "none",
     canvasStatus: "none",
-    tipStatus: "none"
+    tipStatus: "none",
+    adapterSource: ["factorial", "acos", "asin", "atan", "ceil", "cos", "cosh", "exp", "abs", "floor", "ln", "log", "sin", "sqrt", "tan",  //"user1",  /*自定义函数1*/ "user2"   /*自定义函数2*/
+    ],//本地匹配源
+    bindSource: []//绑定到页面的数据，根据用户输入动态变化
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
@@ -249,40 +252,57 @@ Page({
         resultStatus: "none",
         inputString: ""
       });
-      return;
-    }
-    var result = Calcer.calc(input);
-    this.setData({
-      resultStatus: "flex",
-      SolveResult: result
-    });
-  },
-  bindChange: function (e) {
-    input = e.detail.value = util.trim(e.detail.value.toLowerCase());
-    if (input.length == 0) {
-      this.setData({
-        resultStatus: "none",
-        inputString: ""
-      });
       context.clearRect(0, 0, canvasW, canvasH);
       context.draw();
       return;
     }
-    this.setData({
-      inputString: input
-    });
     var result = Calcer.calc(input);
     this.setData({
       resultStatus: "flex",
       SolveResult: result
     });
   },
-  onPlot: function () {
+  bindinput: function (e) {
+    var prefix = e.detail.value = util.trim(e.detail.value.toLowerCase());
+    var len = this.data.inputString.length;
+    if (len <= prefix.length)
+    {
+      prefix = prefix.substring(len);
+      var newSource = []//匹配的结果
+      if (prefix != "") {
+        this.data.adapterSource.forEach(function (e) {
+          if (e.indexOf(prefix) != -1) {
+            newSource.push(e)
+          }
+        })
+      }
+      if (newSource.length != 0) {
+        this.setData({
+          bindSource: newSource
+        })
+      } else {
+        this.setData({
+          inputString: this.data.inputString + prefix,
+          bindSource: []
+        })
+      }
+    }else{
+      this.setData({
+        inputString: prefix,
+        bindSource: []
+      })
+    }
+  },
+  itemtap: function (e) {
     this.setData({
-      canvasStatus: "flex"
+      inputString: this.data.inputString + e.target.id,
+      bindSource: []
     });
+    console.log("itemtap detail " + e.target.id);
+  },
+  onPlot: function () {
     input = this.data.inputString;
-    if("" != input){
+    if ("" != input) {
       if (data instanceof Array)
         data.length = 0;
       data = Calcer.calcs(input, [-5, 5]);
@@ -294,7 +314,15 @@ Page({
       }
       context.draw();
       ploted = true;
+    }else{
+      context.clearRect(0, 0, canvasW, canvasH);
+      context.draw();
     }
+    this.setData({
+      canvasStatus: "flex",
+      resultStatus: "flex",
+      SolveResult: input
+    });
   },
   onLockCanvas: function (e) {
     var curTime = e.timeStamp;
@@ -454,5 +482,10 @@ Page({
       draw(context, data, oldcolor);
       context.draw();
     }
+  },
+  bindPickerChange: function (e) {
+    this.setData({
+      areaIndex: e.detail.value,
+    })
   }
 });
