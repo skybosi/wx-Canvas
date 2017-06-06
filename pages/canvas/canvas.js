@@ -18,6 +18,7 @@ var gridSwitch = false;
 var input = "";
 var scale = 1.0;
 var unit = 1
+var curinput = ""
 //draw line each point
 function draw(ctx, srcdata, color) {
   if (color == undefined) {
@@ -185,6 +186,16 @@ function trace(ctx, position) {
   return [join, calcData];
 }
 
+function lastInput(ctx) {
+  if ("" != curinput) {
+    ctx.setData({
+      inputString: ctx.data.inputString + curinput,
+      bindSource: []
+    })
+    curinput = "";
+  }
+}
+
 Page({
   data: {
     canvasWidth: "0",
@@ -246,6 +257,7 @@ Page({
     origin = [canvasW / 2, canvasH / 2];
   },
   onSolve: function (e) {
+    lastInput(this);
     input = this.data.inputString;
     if (input.length == 0) {
       this.setData({
@@ -264,6 +276,8 @@ Page({
   },
   bindinput: function (e) {
     var prefix = e.detail.value = util.trim(e.detail.value.toLowerCase());
+    var reg= new RegExp('(.{'+(e.detail.cursor-1)+'})');
+    curinput = e.detail.value[e.detail.cursor-1];
     var len = this.data.inputString.length;
     if (len <= prefix.length)
     {
@@ -281,16 +295,27 @@ Page({
           bindSource: newSource
         })
       } else {
-        this.setData({
-          inputString: this.data.inputString + prefix,
-          bindSource: []
-        })
+        if( this.data.bindSource.length == 0){
+          this.setData({
+            inputString: this.data.inputString.replace(reg,'$1' + curinput),
+            bindSource: []
+          })
+          curinput = "";
+        }else{
+          this.setData({
+            inputString: this.data.inputString + prefix,
+            bindSource: []
+          })
+        }
       }
     }else{
+      var tmp = this.data.inputString.replace(reg,'$1' + curinput)
       this.setData({
         inputString: prefix,
-        bindSource: []
+        bindSource: [],
+        SolveResult: prefix
       })
+      curinput = "";
     }
   },
   itemtap: function (e) {
@@ -301,6 +326,7 @@ Page({
     console.log("itemtap detail " + e.target.id);
   },
   onPlot: function () {
+    lastInput(this);
     input = this.data.inputString;
     if ("" != input) {
       if (data instanceof Array)
@@ -483,9 +509,4 @@ Page({
       context.draw();
     }
   },
-  bindPickerChange: function (e) {
-    this.setData({
-      areaIndex: e.detail.value,
-    })
-  }
 });
