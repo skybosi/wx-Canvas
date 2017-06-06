@@ -186,16 +186,30 @@ function trace(ctx, position) {
   return [join, calcData];
 }
 
-function lastInput(ctx) {
-  if ("" != curinput) {
-    ctx.setData({
-      inputString: ctx.data.inputString + curinput,
-      bindSource: []
-    })
-    curinput = "";
+function onPlot(ctx) {
+  input = ctx.data.inputString;
+  if ("" != input) {
+    if (data instanceof Array)
+      data.length = 0;
+    data = Calcer.calcs(input, [-5, 5]);
+    origin = [canvasW / 2, canvasH / 2];
+    scale = util.selfAdapter(data, origin, canvasW, canvasH);
+    draw(context, data, "#ff0000");
+    if (gridSwitch) {
+      grid(context, origin);
+    }
+    context.draw();
+    ploted = true;
+  } else {
+    context.clearRect(0, 0, canvasW, canvasH);
+    context.draw();
   }
+  ctx.setData({
+    canvasStatus: "flex",
+    resultStatus: "flex",
+    SolveResult: input
+  });
 }
-
 Page({
   data: {
     canvasWidth: "0",
@@ -212,15 +226,12 @@ Page({
     resultStatus: "none",
     canvasStatus: "none",
     tipStatus: "none",
-    adapterSource: ["factorial", "acos", "asin", "atan", "ceil", "cos", "cosh", "exp", "abs", "floor", "ln", "log", "sin", "sqrt", "tan",  //"user1",  /*自定义函数1*/ "user2"   /*自定义函数2*/
-    ],//本地匹配源
-    bindSource: []//绑定到页面的数据，根据用户输入动态变化
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
   },
   onLoad: function (e) {
-    console.log("canvas is onload...")
+    console.log("drawer is onload...")
     var W = 0;
     var H = 0;
     wx.getSystemInfo({
@@ -239,6 +250,7 @@ Page({
       }
     })
     this.setData({
+      inputString: e.input,
       inputHeight: H * 0.15,
       canvasWidth: W * 0.9,
       canvasHeight: H * 0.8
@@ -255,100 +267,7 @@ Page({
     context = wx.createCanvasContext('firstCanvas');
     context.setStrokeStyle("rgba(0,255,0)");
     origin = [canvasW / 2, canvasH / 2];
-  },
-  onSolve: function (e) {
-    lastInput(this);
-    input = this.data.inputString;
-    if (input.length == 0) {
-      this.setData({
-        resultStatus: "none",
-        inputString: ""
-      });
-      context.clearRect(0, 0, canvasW, canvasH);
-      context.draw();
-      return;
-    }
-    var result = Calcer.calc(input);
-    this.setData({
-      resultStatus: "flex",
-      SolveResult: result
-    });
-  },
-  bindinput: function (e) {
-    var prefix = e.detail.value = util.trim(e.detail.value.toLowerCase());
-    var reg= new RegExp('(.{'+(e.detail.cursor-1)+'})');
-    curinput = e.detail.value[e.detail.cursor-1];
-    var len = this.data.inputString.length;
-    if (len <= prefix.length)
-    {
-      prefix = prefix.substring(len);
-      var newSource = []//匹配的结果
-      if (prefix != "") {
-        this.data.adapterSource.forEach(function (e) {
-          if (e.indexOf(prefix) != -1) {
-            newSource.push(e)
-          }
-        })
-      }
-      if (newSource.length != 0) {
-        this.setData({
-          bindSource: newSource
-        })
-      } else {
-        if( this.data.bindSource.length == 0){
-          this.setData({
-            inputString: this.data.inputString.replace(reg,'$1' + curinput),
-            bindSource: []
-          })
-          curinput = "";
-        }else{
-          this.setData({
-            inputString: this.data.inputString + prefix,
-            bindSource: []
-          })
-        }
-      }
-    }else{
-      var tmp = this.data.inputString.replace(reg,'$1' + curinput)
-      this.setData({
-        inputString: prefix,
-        bindSource: [],
-        SolveResult: prefix
-      })
-      curinput = "";
-    }
-  },
-  itemtap: function (e) {
-    this.setData({
-      inputString: this.data.inputString + e.target.id,
-      bindSource: []
-    });
-    console.log("itemtap detail " + e.target.id);
-  },
-  onPlot: function () {
-    lastInput(this);
-    input = this.data.inputString;
-    if ("" != input) {
-      if (data instanceof Array)
-        data.length = 0;
-      data = Calcer.calcs(input, [-5, 5]);
-      origin = [canvasW / 2, canvasH / 2];
-      scale = util.selfAdapter(data, origin, canvasW, canvasH);
-      draw(context, data, "#ff0000");
-      if (gridSwitch) {
-        grid(context, origin);
-      }
-      context.draw();
-      ploted = true;
-    }else{
-      context.clearRect(0, 0, canvasW, canvasH);
-      context.draw();
-    }
-    this.setData({
-      canvasStatus: "flex",
-      resultStatus: "flex",
-      SolveResult: input
-    });
+    onPlot(this);
   },
   onLockCanvas: function (e) {
     var curTime = e.timeStamp;
@@ -490,13 +409,6 @@ Page({
       moveArray.length = 0;
     }
     //console.log("Touch End... " + pos[0], pos[1]);
-  },
-  onShareAppMessage: function () {
-    return {
-      title: '自定义分享标题',
-      desc: '自定义分享描述',
-      path: '/page/user?id=123'
-    }
   },
   gridSwitch: function () {
     gridSwitch = !gridSwitch;

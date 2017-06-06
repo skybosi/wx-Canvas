@@ -1,0 +1,26 @@
+<view class="screen">
+  <view>
+    <text class="canvas-text">Hello Drawer{{canvasTouchPosition}}</text>
+  </view>
+  <view class="stageCtrl">
+    <view class="resultCtrl" style="display:{{resultStatus}}">
+      <view class="result">
+        <label>{{SolveResult}}</label>
+      </view>
+      <view class="gridoff">
+        <switch type="switch" bindchange="gridSwitch" />
+      </view>
+    </view>
+    <view class="showCtrl">
+      <text class="plotCtrl" id="lazytime">T: {{lazytime}}</text>
+      <view class="plotCtrl" bindtap="fastTimer">FAST</view>
+      <view class="plotCtrl" bindtap="slowTimer">SLOW</view>
+    </view>
+  </view>
+
+  <!-- canvas.wxml -->
+  <view class="canvas" style="display:{{canvasStatus}}">
+    <view class="tips" style="position:absolute;top:{{tipTop}}rpx;left:{{tipLeft}}rpx;display:{{tipStatus}}">{{canvasTouchPosition}}</view>
+    <canvas class="wxcanvas" bindtap="onLockCanvas" bindlongtap="longTap" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;" canvas-id="firstCanvas"></canvas>
+  </view>
+</view>
