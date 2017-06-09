@@ -15,6 +15,18 @@ function lastInput(ctx) {
     curinput = "";
   }
 }
+
+function simlength(first, second) {
+    var len = (first.length < second.length) ? (first.length) : (second.length);
+	var i = 0;
+    for(;i < len; ++i){
+        if(first[i] != second[i]){
+            break;
+        }   
+    }   
+    return i; 
+}
+
 Page({
   data: {
     inputString: "",
