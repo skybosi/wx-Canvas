@@ -1,14 +1,10 @@
 .content {
   width: 99.5%;
-  height: 50%;
+  height: 100%;
   float: left;
   display: flex;
   flex-direction: column;
   border: solid 1px black;
-  _position: absolute;
-  position: fixed;
-  bottom: 0;
-  left: 0;
 }
 
 .kbctrl {

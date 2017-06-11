@@ -9,20 +9,24 @@
       </view>
     </view>
   </view>
-      <!--<view class="solve" bindtap="onSolve">SOLVE</view>
-    <view class="plot" bindtap="onPlot">PLOT</view>-->
-  <view class="keyboard" bindtouchstart="start" bindtouchmove="chose" bindtouchend="end" >
-    <view wx:if="{{TYPE==0}}" id="0">
-      <import src="../keyboard/keyboard.wxml" />
-      <template is="keyboard" data="{{BG: 'red'}}" />
-    </view>
-    <view wx:if="{{TYPE==1}}" id="1">
-      <import src="../keyboard/basekey.wxml" />
-      <template is="basekey" data="{{BG: 'green'}}" />
-    </view>
-    <view wx:if="{{TYPE==2}}" id="2">
-      <import src="../keyboard/function.wxml" />
-      <template is="function" data="{{BG: 'blue'}}" />
-    </view>
-  </view>
+  <swiper class="keyboard" duration="300">
+    <swiper-item>
+      <view id="k" class="keyboard-item">
+        <import src="../keyboard/keyboard.wxml" />
+        <template is="keyboard" data="{{BG: 'red'}}" />
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view id="b" class="keyboard-item">
+        <import src="../keyboard/basekey.wxml" />
+        <template is="basekey" data="{{BG: 'green'}}" />
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view id="f" class="keyboard-item">
+        <import src="../keyboard/function.wxml" />
+        <template is="function" data="{{BG: 'blue'}}" />
+      </view>
+    </swiper-item>
+  </swiper>
 </view>

@@ -8,6 +8,7 @@ var currpage = [0, 0]
 var prevpage = [0, 0]
 var Page_Switch_Sensitivity = 50
 var iReg = null
+
 Array.prototype.indexof = function (value) {
   var that = this || [];
   for (var i = 0; i < that.length; i++) {
@@ -26,7 +27,6 @@ Page({
   data: {
     inputString: "",
     resultStatus: "none",
-    TYPE: 1,
     SolveResult: "",
     cursor: 0,
     ids: ["Enter", "Plot", "Solve", "Del",
@@ -104,7 +104,7 @@ Page({
   bindfocus: function (e) {
     wx.hideKeyboard();
   },
-  bindblur: function(e){
+  bindblur: function (e) {
     wx.hideKeyboard();
   },
   bclick: function (e) {
@@ -127,10 +127,10 @@ Page({
     var index = this.data.ids.indexof(id);
     var input = null;
     iReg = new RegExp('(.{' + (this.data.cursor) + '})');
-    if (null != iReg){
+    if (null != iReg) {
       input = this.data.inputString.replace(iReg, '$1' + id);
       iReg = null;
-    }else{
+    } else {
       input = this.data.inputString + id;
     }
     if (index > 3) {
@@ -168,32 +168,6 @@ Page({
           break;
       }
     }
-  },
-  start: function (e) {
-    prevpage = getPosition(e);
-    console.log("Touch Start... " + e);
-  },
-  move: function (e) {
-    //page = getPosition(e);
-    console.log("Touch Move... " + e);
-  },
-  end: function (e) {
-    currpage = getPosition(e);
-    var distance = currpage[0] - prevpage[0];
-    if (Math.abs(distance) > Page_Switch_Sensitivity) {
-      if (distance > 0) {
-        var types = ((--this.data.TYPE) < 0) ? 0 : this.data.TYPE;
-        this.setData({
-          TYPE: types
-        });
-      } else {
-        var types = ((++this.data.TYPE) > 2) ? 2 : this.data.TYPE;
-        this.setData({
-          TYPE: types
-        });
-      }
-    }
-    console.log("Touch End... " + e);
   },
   onShareAppMessage: function () {
     return {
