@@ -1,8 +1,15 @@
 <view class="screen">
   <view class="stage">
-    <view class="input" style="height:{{inputHeight}}rpx">
-      <input bindinput="bindinput"  bindfocus="bindfocus" bindblur="bindblur" focus="true" placeholder="|" value="{{inputString}}" />
-    </view>
+    <!--<view class="input" style="height:{{inputHeight}}rpx">
+      <input bindinput="bindinput" bindfocus="bindfocus" bindblur="bindblur" focus="true" placeholder="|" value="{{inputString}}" />
+    </view>-->
+    <!--输入框-->
+    <block>
+      <view class="text_con" bindtap="bindTextAreaFocus">
+        <view style="font-size:18px letter-spacing:2px">{{inputString}}</view>
+        <view animation="{{animationData}}">|</view>
+      </view>
+    </block>
     <view class="resultCtrl" style="display:{{resultStatus}}">
       <view class="result">
         <label>{{SolveResult}}</label>

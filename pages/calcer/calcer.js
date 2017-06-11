@@ -7,8 +7,9 @@ var input = "";
 var currpage = [0, 0]
 var prevpage = [0, 0]
 var Page_Switch_Sensitivity = 50
+var Fonts_Size = 10
 var iReg = null
-
+var curi = 1;
 Array.prototype.indexof = function (value) {
   var that = this || [];
   for (var i = 0; i < that.length; i++) {
@@ -29,6 +30,8 @@ Page({
     resultStatus: "none",
     SolveResult: "",
     cursor: 0,
+    animation:'',
+    animationData:{},
     ids: ["Enter", "Plot", "Solve", "Del",
       "sin", "x", "1", "2", "3", "/", "()",
       "cos", "y", "4", "5", "6", "*", "^",
@@ -41,19 +44,30 @@ Page({
   onLoad: function (e) {
     wx.hideKeyboard();
     iReg = new RegExp('(.{0})');
+    this.data.animation = wx.createAnimation({
+      duration: 200,
+      timingFunction: 'easy',
+    })
+    this.setData({
+      animationData: this.data.animation.export()
+    })
     console.log("calcer is onload...")
   },
   onReady: function (e) {
     console.log("calcer is ready...")
+    var self = this;
   },
-  onShow: function () {
+  onShow: function () {   
+    console.log("calcer is onShow...") 
     // 页面显示
   },
   onHide: function () {
     // 页面隐藏
+    console.log("calcer is onHide...")
   },
   onUnload: function () {
     // 页面关闭
+    console.log("calcer is onUnload...")
   },
   onSolve: function (e) {
     input = this.data.inputString;
@@ -108,20 +122,6 @@ Page({
     wx.hideKeyboard();
   },
   bclick: function (e) {
-    wx.vibrateShort({
-      success: function (e) {
-        // success
-        console.log('brate success() e:' + e);
-      },
-      fail: function (e) {
-        // fail
-        console.log('brate fail() !!!');
-      },
-      complete: function (e) {
-        console.log('brate complete() !!!');
-        // complete
-      }
-    })
     console.log(e.target.id);
     var id = e.target.id;
     var index = this.data.ids.indexof(id);
@@ -134,6 +134,7 @@ Page({
       input = this.data.inputString + id;
     }
     if (index > 3) {
+      curi = 1;
       this.setData({
         inputString: input,
         cursor: input.length
@@ -153,9 +154,12 @@ Page({
           this.onSolve();
           break;
         case "←":
+          var cur = ((curi++) % (this.data.inputString.length)) * (-Fonts_Size);
+          this.data.animation = this.data.animation.translateX(cur).step()
           this.setData({
-            curcor: --this.data.cursor,
-          });
+            animationData: this.data.animation.export(),
+            cursor: --this.data.cursor,
+          })
           break;
         case "ctrl":
           var types = (++this.data.TYPE) % 3;

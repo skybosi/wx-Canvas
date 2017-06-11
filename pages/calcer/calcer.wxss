@@ -1,5 +1,6 @@
 /* pages/canvas/canvas.wxss */
 @import "../keyboard/keys.wxss";
+
 .screen {
   height: 100%;
   width: 100%;
@@ -35,6 +36,17 @@
   align-items: center;
   background: white;
   padding: 8rpx;
+}
+
+.text_con {
+  width: 99.5%;
+  padding: 8rpx;
+  display: flex;
+  background: white;
+  flex-direction: row;
+  align-items: center;
+  display: -webkit-flex;
+  border: 1rpx solid black;
 }
 
 .resultCtrl {
