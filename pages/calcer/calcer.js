@@ -75,7 +75,7 @@ Page({
     var result = this.data.SolveResult
     if ("" != result && !isNaN(parseFloat(result))) {
       input = parseFloat(result);
-    } else if ("null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
+    } else if ("" == input || "null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
       return;
     }
     wx.navigateTo({

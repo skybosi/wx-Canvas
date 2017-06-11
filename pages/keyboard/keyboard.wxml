@@ -10,46 +10,46 @@
       <view class="itm ctrl" bindtap="bclick" id="Del">Del</view>
     </view>
     <view class="group">
-      <view class="itm" bindtap="bclick" id="q">q</view>
-      <view class="itm" bindtap="bclick" id="w">w</view>
-      <view class="itm" bindtap="bclick" id="e">e</view>
-      <view class="itm" bindtap="bclick" id="r">r</view>
-      <view class="itm" bindtap="bclick" id="t">t</view>
-      <view class="itm" bindtap="bclick" id="y">y</view>
-      <view class="itm" bindtap="bclick" id="u">u</view>
-      <view class="itm" bindtap="bclick" id="i">i</view>
-      <view class="itm" bindtap="bclick" id="o">o</view>
-      <view class="itm" bindtap="bclick" id="p">p</view>
+      <view class="itm key" bindtap="bclick" id="q">q</view>
+      <view class="itm key" bindtap="bclick" id="w">w</view>
+      <view class="itm key" bindtap="bclick" id="e">e</view>
+      <view class="itm key" bindtap="bclick" id="r">r</view>
+      <view class="itm key" bindtap="bclick" id="t">t</view>
+      <view class="itm key" bindtap="bclick" id="y">y</view>
+      <view class="itm key" bindtap="bclick" id="u">u</view>
+      <view class="itm key" bindtap="bclick" id="i">i</view>
+      <view class="itm key" bindtap="bclick" id="o">o</view>
+      <view class="itm key" bindtap="bclick" id="p">p</view>
     </view>
     <view class="group">
-      <view class="itm" bindtap="bclick" id="a">a</view>
-      <view class="itm" bindtap="bclick" id="s">s</view>
-      <view class="itm" bindtap="bclick" id="d">d</view>
-      <view class="itm" bindtap="bclick" id="f">f</view>
-      <view class="itm" bindtap="bclick" id="g">g</view>
-      <view class="itm" bindtap="bclick" id="h">h</view>
-      <view class="itm" bindtap="bclick" id="j">j</view>
-      <view class="itm" bindtap="bclick" id="k">k</view>
-      <view class="itm" bindtap="bclick" id="l">l</view>
-      <view class="itm" bindtap="bclick" id=";">;</view>
+      <view class="itm key" bindtap="bclick" id="a">a</view>
+      <view class="itm key" bindtap="bclick" id="s">s</view>
+      <view class="itm key" bindtap="bclick" id="d">d</view>
+      <view class="itm key" bindtap="bclick" id="f">f</view>
+      <view class="itm key" bindtap="bclick" id="g">g</view>
+      <view class="itm key" bindtap="bclick" id="h">h</view>
+      <view class="itm key" bindtap="bclick" id="j">j</view>
+      <view class="itm key" bindtap="bclick" id="k">k</view>
+      <view class="itm key" bindtap="bclick" id="l">l</view>
+      <view class="itm key" bindtap="bclick" id=";">;</view>
     </view>
     <view class="group">
-      <view class="itm" bindtap="bclick" id="z">z</view>
-      <view class="itm" bindtap="bclick" id="x">x</view>
-      <view class="itm" bindtap="bclick" id="c">c</view>
-      <view class="itm" bindtap="bclick" id="v">v</view>
-      <view class="itm" bindtap="bclick" id="b">b</view>
-      <view class="itm" bindtap="bclick" id="n">n</view>
-      <view class="itm" bindtap="bclick" id="m">m</view>
-      <view class="itm" bindtap="bclick" id="'">'</view>
-      <view class="itm" bindtap="bclick" id='"'>"</view>
-      <view class="itm" bindtap="bclick" id="?">?</view>
+      <view class="itm key" bindtap="bclick" id="z">z</view>
+      <view class="itm key" bindtap="bclick" id="x">x</view>
+      <view class="itm key" bindtap="bclick" id="c">c</view>
+      <view class="itm key" bindtap="bclick" id="v">v</view>
+      <view class="itm key" bindtap="bclick" id="b">b</view>
+      <view class="itm key" bindtap="bclick" id="n">n</view>
+      <view class="itm key" bindtap="bclick" id="m">m</view>
+      <view class="itm key" bindtap="bclick" id="'">'</view>
+      <view class="itm key" bindtap="bclick" id='"'>"</view>
+      <view class="itm key" bindtap="bclick" id="?">?</view>
     </view>
     <view class="group">
-      <view class="itm" bindtap="bclick" id="lshift">shift</view>
-      <view class="itm" bindtap="bclick" id="Enter">Enter</view>
-      <view class="itm" bindtap="bclick" id="space"></view>
-      <view class="itm" bindtap="bclick" id="lshift">shift</view>
+      <view class="itm key" bindtap="bclick" id="lshift">shift</view>
+      <view class="itm key" bindtap="bclick" id="Enter">Enter</view>
+      <view class="itm key" bindtap="bclick" id="space"></view>
+      <view class="itm key" bindtap="bclick" id="lshift">shift</view>
     </view>
   </view>
 </template>

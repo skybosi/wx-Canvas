@@ -1,5 +1,5 @@
 .content {
-  width: 99.5%;
+  width: 100%;
   height: 100%;
   float: left;
   display: flex;
@@ -49,8 +49,14 @@
   background: #0095cd;
 }
 
-.nouse {
+.lock {
   color: #d9eef7;
   border: solid 1px white;
   background: #4d4d4d;
+}
+
+.key{
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #ff9900;
 }

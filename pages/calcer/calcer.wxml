@@ -9,7 +9,7 @@
       </view>
     </view>
   </view>
-  <swiper class="keyboard" duration="300">
+  <swiper current="1" class="keyboard" duration="300">
     <swiper-item>
       <view id="k" class="keyboard-item">
         <import src="../keyboard/keyboard.wxml" />

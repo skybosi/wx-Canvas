@@ -20,7 +20,7 @@
     </view>
     <view class="group">
       <view class="itm func" bindtap="bclick" id="cos">cos</view>
-      <view class="itm nouse" bindtap="bclick" id="y">y</view>
+      <view class="itm lock" bindtap="bclick" id="y">y</view>
       <view class="itm num" bindtap="bclick" id="4">4</view>
       <view class="itm num" bindtap="bclick" id="5">5</view>
       <view class="itm num" bindtap="bclick" id="6">6</view>
@@ -30,7 +30,7 @@
 
     <view class="group">
       <view class="itm func" bindtap="bclick" id="tan">tan</view>
-      <view class="itm nouse" bindtap="bclick" id="T">T</view>
+      <view class="itm lock" bindtap="bclick" id="T">T</view>
       <view class="itm num" bindtap="bclick" id="7">7</view>
       <view class="itm num" bindtap="bclick" id="8">8</view>
       <view class="itm num" bindtap="bclick" id="9">9</view>
@@ -39,12 +39,12 @@
     </view>
     <view class="group">
       <view class="itm func" bindtap="bclick" id="ln">ln</view>
-      <view class="itm nouse" bindtap="bclick" id="=">=</view>
+      <view class="itm lock" bindtap="bclick" id="=">=</view>
       <view class="itm num" bindtap="bclick" id=",">,</view>
       <view class="itm num" bindtap="bclick" id="0">0</view>
       <view class="itm num" bindtap="bclick" id=".">.</view>
       <view class="itm sign" bindtap="bclick" id="+">+</view>
-      <view class="itm nouse" bindtap="bclick" id="[]">[]</view>
+      <view class="itm lock" bindtap="bclick" id="[]">[]</view>
     </view>
   </view>
 </template>
