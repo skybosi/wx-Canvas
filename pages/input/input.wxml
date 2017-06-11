@@ -1,0 +1,50 @@
+<view class="content" style="background-color:{{BG}}">
+  <view class="kbctrl" bindtap="bclick" id="ctrl">
+    <label>=</label>
+  </view>
+  <view class="ripple" style="{{rippleStyle}}"></view>
+  <view class="group">
+    <!--<view class="itm ctrl" bindtap="bclick" id="Enter" style="{{rippleStyle}}">Enter</view>-->
+    <view class="itm ctrl" bindtap="bclick" id="Enter">Enter</view>
+    <view class="itm ctrl" bindtap="bclick" id="Plot">Plot</view>
+    <view class="itm ctrl" bindtap="bclick" id="Solve">Solve</view>
+    <view class="itm ctrl" bindtap="bclick" id="Del">Del</view>
+  </view>
+  <view class="group">
+    <view class="itm func" bindtap="bclick" id="sin">sin</view>
+    <view class="itm func" bindtap="bclick" id="x">x</view>
+    <view class="itm num" bindtap="bclick" id="1">1</view>
+    <view class="itm num" bindtap="bclick" id="2">2</view>
+    <view class="itm num" bindtap="bclick" id="3">3</view>
+    <view class="itm sign" bindtap="bclick" id="/">/</view>
+    <view class="itm sign" bindtap="bclick" id="()">()</view>
+  </view>
+  <view class="group">
+    <view class="itm func" bindtap="bclick" id="cos">cos</view>
+    <view class="itm nouse" bindtap="bclick" id="y">y</view>
+    <view class="itm num" bindtap="bclick" id="4">4</view>
+    <view class="itm num" bindtap="bclick" id="5">5</view>
+    <view class="itm num" bindtap="bclick" id="6">6</view>
+    <view class="itm sign" bindtap="bclick" id="*">*</view>
+    <view class="itm sign" bindtap="bclick" id="^">^</view>
+  </view>
+
+  <view class="group">
+    <view class="itm func" bindtap="bclick" id="tan">tan</view>
+    <view class="itm nouse" bindtap="bclick" id="T">T</view>
+    <view class="itm num" bindtap="bclick" id="7">7</view>
+    <view class="itm num" bindtap="bclick" id="8">8</view>
+    <view class="itm num" bindtap="bclick" id="9">9</view>
+    <view class="itm sign" bindtap="bclick" id="-">-</view>
+    <view class="itm sign" bindtap="bclick" id="√">√</view>
+  </view>
+  <view class="group">
+    <view class="itm func" bindtap="bclick" id="ln">ln</view>
+    <view class="itm nouse" bindtap="bclick" id="=">=</view>
+    <view class="itm num" bindtap="bclick" id=",">,</view>
+    <view class="itm num" bindtap="bclick" id="0">0</view>
+    <view class="itm num" bindtap="bclick" id=".">.</view>
+    <view class="itm sign" bindtap="bclick" id="+">+</view>
+    <view class="itm nouse" bindtap="bclick" id="[]">[]</view>
+  </view>
+</view>

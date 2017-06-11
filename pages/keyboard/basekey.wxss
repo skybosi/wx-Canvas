@@ -1,0 +1,60 @@
+.content {
+  width: 99.5%;
+  height: 50%;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px black;  
+  _position:absolute;
+  position: fixed;
+  bottom: 0;  
+  left: 0;
+}
+
+.kbctrl{
+  text-align: center;
+  padding: 0rpx;
+}
+
+.group {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+}
+
+.itm {
+  width: 25%;
+  text-align: center;
+  padding-top: 25rpx;
+}
+
+.ctrl {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: black;
+}
+
+.num {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #f78d1d;
+}
+
+.sign {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #fd8ddf;
+}
+
+.func {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #0095cd;
+}
+
+.nouse{  
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #4d4d4d;
+}

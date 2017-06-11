@@ -4,44 +4,64 @@ var Data = require("../../data/data.js");
 var Calcer = require("../../lib/expression.js");
 var gridSwitch = false;
 var input = "";
-var curinput = ""
-
-function lastInput(ctx) {
-  if ("" != curinput) {
-    ctx.setData({
-      inputString: ctx.data.inputString + curinput,
-      bindSource: []
-    })
-    curinput = "";
+var currpage = [0, 0]
+var prevpage = [0, 0]
+var Page_Switch_Sensitivity = 50
+var iReg = null
+Array.prototype.indexof = function (value) {
+  var that = this || [];
+  for (var i = 0; i < that.length; i++) {
+    if (that[i] == value)
+      return i;
   }
+  return -1;
 }
+function getPosition(e) {
+  //console.log(e.touches[0].x,e.touches[0].y);
+  //return [e.touches[0].x, e.touches[0].y];
+  return [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
+}
+
 Page({
   data: {
     inputString: "",
     resultStatus: "none",
-    adapterSource: ["factorial", "acos", "asin", "atan", "ceil", "cos", "cosh", "exp", "abs", "floor", "ln", "log", "sin", "sqrt", "tan",  //"user1",  /*自定义函数1*/ "user2"   /*自定义函数2*/
-    ],//本地匹配源
-    bindSource: []//绑定到页面的数据，根据用户输入动态变化
+    TYPE: 1,
+    SolveResult: "",
+    cursor: 0,
+    ids: ["Enter", "Plot", "Solve", "Del",
+      "sin", "x", "1", "2", "3", "/", "()",
+      "cos", "y", "4", "5", "6", "*", "^",
+      "tan", "T", "7", "8", "9", "-", "sqrt",
+      "ln", "=", ",", "0", ".", "+", "[]"]
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
   },
   onLoad: function (e) {
+    wx.hideKeyboard();
+    iReg = new RegExp('(.{0})');
     console.log("calcer is onload...")
   },
   onReady: function (e) {
     console.log("calcer is ready...")
   },
+  onShow: function () {
+    // 页面显示
+  },
+  onHide: function () {
+    // 页面隐藏
+  },
+  onUnload: function () {
+    // 页面关闭
+  },
   onSolve: function (e) {
-    lastInput(this);
     input = this.data.inputString;
     if (input.length == 0) {
       this.setData({
         resultStatus: "none",
         inputString: ""
       });
-      context.clearRect(0, 0, canvasW, canvasH);
-      context.draw();
       return;
     }
     var result = Calcer.calc(input);
@@ -50,62 +70,15 @@ Page({
       SolveResult: result
     });
   },
-  bindinput: function (e) {
-    var prefix = e.detail.value = util.trim(e.detail.value.toLowerCase());
-    var reg= new RegExp('(.{'+(e.detail.cursor-1)+'})');
-    curinput = e.detail.value[e.detail.cursor-1];
-    var len = this.data.inputString.length;
-    if (len <= prefix.length)
-    {
-      prefix = prefix.substring(len);
-      var newSource = []//匹配的结果
-      if (prefix != "") {
-        this.data.adapterSource.forEach(function (e) {
-          if (e.indexOf(prefix) != -1) {
-            newSource.push(e)
-          }
-        })
-      }
-      if (newSource.length != 0) {
-        this.setData({
-          bindSource: newSource
-        })
-      } else {
-        if( this.data.bindSource.length == 0){
-          this.setData({
-            inputString: this.data.inputString.replace(reg,'$1' + curinput),
-            bindSource: []
-          })
-          curinput = "";
-        }else{
-          this.setData({
-            inputString: this.data.inputString + prefix,
-            bindSource: []
-          })
-        }
-      }
-    }else{
-      var tmp = this.data.inputString.replace(reg,'$1' + curinput)
-      this.setData({
-        inputString: prefix,
-        bindSource: [],
-        SolveResult: prefix
-      })
-      curinput = "";
-    }
-  },
-  itemtap: function (e) {
-    this.setData({
-      inputString: this.data.inputString + e.target.id,
-      bindSource: []
-    });
-    console.log("itemtap detail " + e.target.id);
-  },
   onPlot: function () {
-    lastInput(this);
     input = this.data.inputString;
+    var result = this.data.SolveResult
+    if ("" != result && !isNaN(parseFloat(result))) {
+      input = parseFloat(result);
+    } else if ("null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
+      return;
+    }
     wx.navigateTo({
-      //url: '../logs/logs?input='+input
       url: '../drawer/drawer?input=' + input,
       success: function (res) {
         // success
@@ -119,7 +92,108 @@ Page({
         console.log('onBtnClick complete() !!!');
         // complete
       }
-    }) 
+    })
+  },
+  bindinput: function (e) {
+    iReg = new RegExp('(.{' + (this.data.cursor) + '})');
+    wx.hideKeyboard();
+  },
+  bindchange: function (e) {
+    wx.hideKeyboard();
+  },
+  bindfocus: function (e) {
+    wx.hideKeyboard();
+  },
+  bindblur: function(e){
+    wx.hideKeyboard();
+  },
+  bclick: function (e) {
+    wx.vibrateShort({
+      success: function (e) {
+        // success
+        console.log('brate success() e:' + e);
+      },
+      fail: function (e) {
+        // fail
+        console.log('brate fail() !!!');
+      },
+      complete: function (e) {
+        console.log('brate complete() !!!');
+        // complete
+      }
+    })
+    console.log(e.target.id);
+    var id = e.target.id;
+    var index = this.data.ids.indexof(id);
+    var input = null;
+    iReg = new RegExp('(.{' + (this.data.cursor) + '})');
+    if (null != iReg){
+      input = this.data.inputString.replace(iReg, '$1' + id);
+      iReg = null;
+    }else{
+      input = this.data.inputString + id;
+    }
+    if (index > 3) {
+      this.setData({
+        inputString: input,
+        cursor: input.length
+      });
+    } else {
+      switch (id) {
+        case "Del":
+          this.setData({
+            inputString: this.data.inputString.slice(0, -1),
+            SolveResult: ""
+          });
+          break;
+        case "Plot":
+          this.onPlot();
+          break;
+        case "Solve":
+          this.onSolve();
+          break;
+        case "←":
+          this.setData({
+            curcor: --this.data.cursor,
+          });
+          break;
+        case "ctrl":
+          var types = (++this.data.TYPE) % 3;
+          this.setData({
+            TYPE: types,
+            SolveResult: ""
+          });
+          break;
+        default:
+          break;
+      }
+    }
+  },
+  start: function (e) {
+    prevpage = getPosition(e);
+    console.log("Touch Start... " + e);
+  },
+  move: function (e) {
+    //page = getPosition(e);
+    console.log("Touch Move... " + e);
+  },
+  end: function (e) {
+    currpage = getPosition(e);
+    var distance = currpage[0] - prevpage[0];
+    if (Math.abs(distance) > Page_Switch_Sensitivity) {
+      if (distance > 0) {
+        var types = ((--this.data.TYPE) < 0) ? 0 : this.data.TYPE;
+        this.setData({
+          TYPE: types
+        });
+      } else {
+        var types = ((++this.data.TYPE) > 2) ? 2 : this.data.TYPE;
+        this.setData({
+          TYPE: types
+        });
+      }
+    }
+    console.log("Touch End... " + e);
   },
   onShareAppMessage: function () {
     return {

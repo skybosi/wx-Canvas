@@ -64,6 +64,29 @@ function trim(str){
 function toString(point){
   return point[0].toFixed(3) + ", "+ point[1].toFixed(1)// + point[2];
 }
+
+function obj2string(obj) {
+  var str = ""
+  for (var a in obj) {
+    if (typeof (obj[a]) == "object") {
+      str += ("\t" + a + " = " + obj2string(obj[a]) + "\n"); //递归遍历
+    }
+    else {
+      str += (a + " = " + obj[a] + "\n");//值就显示
+    }
+  }
+  return str
+}
+function similarLen(src, dst) {
+  var len = ((src.length < dst.length) ? src.length : dst.length)
+  for (var i = 0; i < len; i++) {
+    if (src[i] != dst[i]) {
+      break;
+    }
+  }
+  return i + 1;
+}
+
 module.exports = {
   formatTime: formatTime,
   readData: readData,

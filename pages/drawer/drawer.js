@@ -14,7 +14,7 @@ var origin = [0, 0];
 var canvasW = 0;
 var canvasH = 0;
 var oldcolor;
-var gridSwitch = false;
+var gridSwitch = true;
 var input = "";
 var scale = 1.0;
 var unit = 1

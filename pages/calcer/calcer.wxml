@@ -1,26 +1,28 @@
 <view class="screen">
-  <!--<view>
-    <text class="canvas-text">Hello Canvas{{canvasTouchPosition}}</text>
-  </view>-->
-  <view class="stageCtrl">
-    <view class="inPutCtrl">
-      <view class="input" style="height:{{inputHeight}}rpx">
-        <input bindinput="bindinput" placeholder="|" value="{{inputString}}" focus="{{focus}}" />
-      </view>
-      <view class="solve" bindtap="onSolve">SOLVE</view>
-      <view class="plot" bindtap="onPlot">PLOT</view>
+  <view class="stage">
+    <view class="input" style="height:{{inputHeight}}rpx">
+      <input bindinput="bindinput"  bindfocus="bindfocus" bindblur="bindblur" focus="true" placeholder="|" value="{{inputString}}" />
     </view>
-    <scroll-view scroll-y="true" class="scrollview">
-      <view wx:for="{{bindSource}}">
-        <view id="{{item}}" bindtap="itemtap" class="itemview">
-          {{item}}
-        </view>
-      </view>
-    </scroll-view>
     <view class="resultCtrl" style="display:{{resultStatus}}">
       <view class="result">
         <label>{{SolveResult}}</label>
       </view>
+    </view>
+  </view>
+      <!--<view class="solve" bindtap="onSolve">SOLVE</view>
+    <view class="plot" bindtap="onPlot">PLOT</view>-->
+  <view class="keyboard" bindtouchstart="start" bindtouchmove="chose" bindtouchend="end" >
+    <view wx:if="{{TYPE==0}}" id="0">
+      <import src="../keyboard/keyboard.wxml" />
+      <template is="keyboard" data="{{BG: 'red'}}" />
+    </view>
+    <view wx:if="{{TYPE==1}}" id="1">
+      <import src="../keyboard/basekey.wxml" />
+      <template is="basekey" data="{{BG: 'green'}}" />
+    </view>
+    <view wx:if="{{TYPE==2}}" id="2">
+      <import src="../keyboard/function.wxml" />
+      <template is="function" data="{{BG: 'blue'}}" />
     </view>
   </view>
 </view>

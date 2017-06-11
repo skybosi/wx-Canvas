@@ -8,7 +8,7 @@
         <label>{{SolveResult}}</label>
       </view>
       <view class="gridoff">
-        <switch type="switch" bindchange="gridSwitch" />
+        <switch type="switch" checked="true" bindchange="gridSwitch" />
       </view>
     </view>
     <view class="showCtrl">
