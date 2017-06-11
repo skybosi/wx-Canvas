@@ -13,3 +13,7 @@ This is example drag canvas show!
 This is example grid-trace-drag canvas show!
 
 ![gtd](./doc/grid-trace-drag.gif)
+
+This is example show multi-keyboard, but not work now(2017-6-11)
+
+![gtd](./doc/multi-key.gif)
