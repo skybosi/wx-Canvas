@@ -20,9 +20,11 @@
 }
 
 .itm {
+  font-family: "微软雅黑";
   width: 25%;
   text-align: center;
-  padding-top: 25rpx;
+  line-height: 100rpx;
+  border-radius: 9rpx;
 }
 
 .ctrl {
@@ -55,8 +57,8 @@
   background: #4d4d4d;
 }
 
-.key{
+.key {
   color: #d9eef7;
   border: solid 1px white;
-  background: #ff9900;
+  background: #f90;
 }

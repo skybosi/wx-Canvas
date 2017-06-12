@@ -10,6 +10,8 @@ var Page_Switch_Sensitivity = 50
 var Fonts_Size = 10
 var iReg = null
 var curi = 1;
+var a = 8  //padding left
+var b = Fonts_Size
 Array.prototype.indexof = function (value) {
   var that = this || [];
   for (var i = 0; i < that.length; i++) {
@@ -30,9 +32,16 @@ Page({
     resultStatus: "none",
     SolveResult: "",
     cursor: 0,
-    animation:'',
-    animationData:{},
-    ids: ["Enter", "Plot", "Solve", "Del",
+    animation: '',
+    animationData: {},
+    curinputlen: a,
+    commonIds: ["Enter", "Plot", "Solve", "Del"],
+    kyboardIds: [
+      'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+      'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
+      'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '?',
+      "shiht", 'Enter', '', "shift"],
+    basekeyIds: [
       "sin", "x", "1", "2", "3", "/", "()",
       "cos", "y", "4", "5", "6", "*", "^",
       "tan", "T", "7", "8", "9", "-", "sqrt",
@@ -52,13 +61,15 @@ Page({
       animationData: this.data.animation.export()
     })
     console.log("calcer is onload...")
+    this.data.kyboardIds = this.data.commonIds.concat(this.data.kyboardIds);
+    this.data.basekeyIds = this.data.commonIds.concat(this.data.basekeyIds);
   },
   onReady: function (e) {
     console.log("calcer is ready...")
     var self = this;
   },
-  onShow: function () {   
-    console.log("calcer is onShow...") 
+  onShow: function () {
+    console.log("calcer is onShow...")
     // 页面显示
   },
   onHide: function () {
@@ -124,7 +135,8 @@ Page({
   bclick: function (e) {
     console.log(e.target.id);
     var id = e.target.id;
-    var index = this.data.ids.indexof(id);
+    var index = this.data.basekeyIds.indexof(id)
+    if (index == -1) { index = this.data.kyboardIds.indexof(id); }
     var input = null;
     iReg = new RegExp('(.{' + (this.data.cursor) + '})');
     if (null != iReg) {
@@ -134,11 +146,15 @@ Page({
       input = this.data.inputString + id;
     }
     if (index > 3) {
-      curi = 1;
+      var cur = (curi - 1) * Fonts_Size;
+      this.data.animation = this.data.animation.translateX(cur).step()
       this.setData({
         inputString: input,
-        cursor: input.length
+        curinputlen: a + b * input.length,
+        cursor: input.length,
+        animationData: this.data.animation.export()
       });
+      curi = 1;
     } else {
       switch (id) {
         case "Del":
@@ -172,6 +188,17 @@ Page({
           break;
       }
     }
+    console.log("animation" + this.data.animation);
+  },
+  bindTextAreaFocus: function (e) {
+    var curX = e.detail.x;
+    var cur = -(this.data.curinputlen - Math.floor((curX - a) / (2 * b)) * b);
+    this.data.animation = this.data.animation.translateX(cur).step()
+    this.setData({
+      animationData: this.data.animation.export(),
+      cursor: --this.data.cursor,
+    })
+    console.log('bindTextAreaFocus =' + e)
   },
   onShareAppMessage: function () {
     return {

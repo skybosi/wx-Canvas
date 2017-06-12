@@ -4,13 +4,19 @@
       <label>=</label>
     </view>
     <view class="group">
-      <view class="itm ctrl" bindtap="bclick" id="Enter">Enter</view>
+      <view class="itm ctrl" wx:for="{{['Enter','Plot','Solve','Del']}}" wx:for-index="idx" data-index="{{idx}}" data-val="{{item}}" id="{{item}}" bindtap="bclick">
+        {{item}}
+      </view>
+      <!--<view class="itm ctrl" bindtap="bclick" id="Enter">Enter</view>
       <view class="itm ctrl" bindtap="bclick" id="Plot">Plot</view>
       <view class="itm ctrl" bindtap="bclick" id="Solve">Solve</view>
-      <view class="itm ctrl" bindtap="bclick" id="Del">Del</view>
+      <view class="itm ctrl" bindtap="bclick" id="Del">Del</view>-->
     </view>
     <view class="group">
-      <view class="itm key" bindtap="bclick" id="q">q</view>
+      <view class="itm key" wx:for="qwertyuiop" wx:for-index="idx" data-index="{{idx}}" data-val="{{item}}" id="{{item}}" bindtap="bclick">
+        {{item}}
+      </view>
+      <!--<view class="itm key" bindtap="bclick" id="q">q</view>
       <view class="itm key" bindtap="bclick" id="w">w</view>
       <view class="itm key" bindtap="bclick" id="e">e</view>
       <view class="itm key" bindtap="bclick" id="r">r</view>
@@ -19,10 +25,13 @@
       <view class="itm key" bindtap="bclick" id="u">u</view>
       <view class="itm key" bindtap="bclick" id="i">i</view>
       <view class="itm key" bindtap="bclick" id="o">o</view>
-      <view class="itm key" bindtap="bclick" id="p">p</view>
+      <view class="itm key" bindtap="bclick" id="p">p</view>-->
     </view>
     <view class="group">
-      <view class="itm key" bindtap="bclick" id="a">a</view>
+      <view class="itm key" wx:for="asdfghjkl;" wx:for-index="idx" data-index="{{idx}}" data-val="{{item}}" id="{{item}}" bindtap="bclick">
+        {{item}}
+      </view>
+      <!--<view class="itm key" bindtap="bclick" id="a">a</view>
       <view class="itm key" bindtap="bclick" id="s">s</view>
       <view class="itm key" bindtap="bclick" id="d">d</view>
       <view class="itm key" bindtap="bclick" id="f">f</view>
@@ -31,10 +40,13 @@
       <view class="itm key" bindtap="bclick" id="j">j</view>
       <view class="itm key" bindtap="bclick" id="k">k</view>
       <view class="itm key" bindtap="bclick" id="l">l</view>
-      <view class="itm key" bindtap="bclick" id=";">;</view>
+      <view class="itm key" bindtap="bclick" id=";">;</view>-->
     </view>
     <view class="group">
-      <view class="itm key" bindtap="bclick" id="z">z</view>
+      <view class="itm key" wx:for="zxcvbnm<>?" wx:for-index="idx" data-index="{{idx}}" data-val="{{item}}" id="{{item}}" bindtap="bclick">
+        {{item}}
+      </view>
+      <!--<view class="itm key" bindtap="bclick" id="z">z</view>
       <view class="itm key" bindtap="bclick" id="x">x</view>
       <view class="itm key" bindtap="bclick" id="c">c</view>
       <view class="itm key" bindtap="bclick" id="v">v</view>
@@ -43,13 +55,16 @@
       <view class="itm key" bindtap="bclick" id="m">m</view>
       <view class="itm key" bindtap="bclick" id="'">'</view>
       <view class="itm key" bindtap="bclick" id='"'>"</view>
-      <view class="itm key" bindtap="bclick" id="?">?</view>
+      <view class="itm key" bindtap="bclick" id="?">?</view>-->
     </view>
     <view class="group">
-      <view class="itm key" bindtap="bclick" id="lshift">shift</view>
+      <view class="itm key" wx:for="{{['lshift','Enter','','shift']}}" wx:for-index="idx" data-index="{{idx}}" data-val="{{item}}" id="{{item}}" bindtap="bclick">
+        {{item}}
+      </view>
+      <!--<view class="itm key" bindtap="bclick" id="lshift">shift</view>
       <view class="itm key" bindtap="bclick" id="Enter">Enter</view>
       <view class="itm key" bindtap="bclick" id="space"></view>
-      <view class="itm key" bindtap="bclick" id="lshift">shift</view>
+      <view class="itm key" bindtap="bclick" id="lshift">shift</view>-->
     </view>
   </view>
 </template>

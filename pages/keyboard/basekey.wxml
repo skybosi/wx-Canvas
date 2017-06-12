@@ -1,13 +1,14 @@
 <template name="basekey">
-   <view class="content" style="background-color:{{BG}}">
+  <view class="content" style="background-color:{{BG}}">
     <view class="kbctrl" bindtap="bclick" id="ctrl">
       <label>=</label>
     </view>
     <view class="group">
-      <view class="itm ctrl" bindtap="bclick" id="Del">Del</view>
+      <view class="itm ctrl" wx:for="{{['Del','Plot','Solve','←']}}" wx:for-index="idx" data-index="{{idx}}" data-val="{{item}}" id="{{item}}" bindtap="bclick">{{item}}</view>
+      <!--<view class="itm ctrl" bindtap="bclick" id="Del">Del</view>
       <view class="itm ctrl" bindtap="bclick" id="Plot">Plot</view>
       <view class="itm ctrl" bindtap="bclick" id="Solve">Solve</view>
-      <view class="itm ctrl" bindtap="bclick" id="←">←</view>
+      <view class="itm ctrl" bindtap="bclick" id="←">←</view>-->
     </view>
     <view class="group">
       <view class="itm func" bindtap="bclick" id="sin">sin</view>
