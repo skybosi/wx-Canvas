@@ -4,14 +4,12 @@ var Data = require("../../data/data.js");
 var Calcer = require("../../lib/expression.js");
 var gridSwitch = false;
 var input = "";
+var placeholder = '|';
 var currpage = [0, 0]
 var prevpage = [0, 0]
 var Page_Switch_Sensitivity = 50
-var Fonts_Size = 10
 var iReg = null
-var curi = 1;
-var a = 8  //padding left
-var b = Fonts_Size
+
 Array.prototype.indexof = function (value) {
   var that = this || [];
   for (var i = 0; i < that.length; i++) {
@@ -20,6 +18,22 @@ Array.prototype.indexof = function (value) {
   }
   return -1;
 }
+
+String.prototype.del = function (index) {
+  index = (index < 0) ? (this.length + index) : (index)
+  var ast = this.split('');
+  ast[index] = ''
+  return ast.join('');
+}
+
+String.prototype.swap = function (s, e) {
+  s = (s < 0) ? (this.length + s) : (s)
+  e = (e < 0) ? (this.length + e) : (e)
+  var ast = this.split('');
+  [ast[s], ast[e]] = [ast[e], ast[s]];
+  return ast.join('');
+}
+
 function getPosition(e) {
   //console.log(e.touches[0].x,e.touches[0].y);
   //return [e.touches[0].x, e.touches[0].y];
@@ -28,13 +42,10 @@ function getPosition(e) {
 
 Page({
   data: {
-    inputString: "",
+    inputString: placeholder,
     resultStatus: "none",
     SolveResult: "",
     cursor: 0,
-    animation: '',
-    animationData: {},
-    curinputlen: a,
     commonIds: ["Enter", "Plot", "Solve", "Del"],
     kyboardIds: [
       'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
@@ -53,14 +64,6 @@ Page({
   onLoad: function (e) {
     wx.hideKeyboard();
     iReg = new RegExp('(.{0})');
-    this.data.animation = wx.createAnimation({
-      duration: 200,
-      timingFunction: 'easy',
-    })
-    this.setData({
-      animationData: this.data.animation.export()
-    })
-    console.log("calcer is onload...")
     this.data.kyboardIds = this.data.commonIds.concat(this.data.kyboardIds);
     this.data.basekeyIds = this.data.commonIds.concat(this.data.basekeyIds);
   },
@@ -81,7 +84,7 @@ Page({
     console.log("calcer is onUnload...")
   },
   onSolve: function (e) {
-    input = this.data.inputString;
+    input = this.data.inputString.replace(placeholder, '');
     if (input.length == 0) {
       this.setData({
         resultStatus: "none",
@@ -96,11 +99,9 @@ Page({
     });
   },
   onPlot: function () {
-    input = this.data.inputString;
+    input = this.data.inputString.replace(placeholder, '');
     var result = this.data.SolveResult
-    if ("" != result && !isNaN(parseFloat(result))) {
-      input = parseFloat(result);
-    } else if ("" == input || "null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
+    if ("" != result || "" == input || "null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
       return;
     }
     wx.navigateTo({
@@ -132,6 +133,9 @@ Page({
   bindblur: function (e) {
     wx.hideKeyboard();
   },
+  bindconfirm: function (e) {
+    wx.hideKeyboard();
+  },
   bclick: function (e) {
     console.log(e.target.id);
     var id = e.target.id;
@@ -146,22 +150,21 @@ Page({
       input = this.data.inputString + id;
     }
     if (index > 3) {
-      var cur = (curi - 1) * Fonts_Size;
-      this.data.animation = this.data.animation.translateX(cur).step()
       this.setData({
         inputString: input,
-        curinputlen: a + b * input.length,
-        cursor: input.length,
-        animationData: this.data.animation.export()
+        cursor: this.data.cursor + id.length,
       });
-      curi = 1;
     } else {
       switch (id) {
         case "Del":
-          this.setData({
-            inputString: this.data.inputString.slice(0, -1),
-            SolveResult: ""
-          });
+          var pos = this.data.cursor - 1;
+          if (pos >= 0) {
+            this.setData({
+              inputString: this.data.inputString.del(pos),
+              cursor: --this.data.cursor,
+              SolveResult: ""
+            });
+          }
           break;
         case "Plot":
           this.onPlot();
@@ -170,12 +173,34 @@ Page({
           this.onSolve();
           break;
         case "←":
-          var cur = ((curi++) % (this.data.inputString.length)) * (-Fonts_Size);
-          this.data.animation = this.data.animation.translateX(cur).step()
+          var pos = this.data.cursor;
+          var ninput = ""
+          if (pos > 0) {
+            --pos;
+            ninput = this.data.inputString.swap(pos + 1, pos);
+          } else {
+            ninput = this.data.inputString;
+          }
           this.setData({
-            animationData: this.data.animation.export(),
-            cursor: --this.data.cursor,
-          })
+            inputString: ninput,
+            cursor: pos,
+            SolveResult: ""
+          });
+          break;
+        case "→":
+          var pos = this.data.cursor;
+          var ninput = ""
+          if (pos != this.data.inputString.length - 1) {
+            ++pos;
+            ninput = this.data.inputString.swap(pos - 1, pos);
+          } else {
+            ninput = this.data.inputString.swap(pos, pos + 1);
+          }
+          this.setData({
+            inputString: ninput,
+            cursor: pos,
+            SolveResult: ""
+          });
           break;
         case "ctrl":
           var types = (++this.data.TYPE) % 3;
@@ -188,17 +213,6 @@ Page({
           break;
       }
     }
-    console.log("animation" + this.data.animation);
-  },
-  bindTextAreaFocus: function (e) {
-    var curX = e.detail.x;
-    var cur = -(this.data.curinputlen - Math.floor((curX - a) / (2 * b)) * b);
-    this.data.animation = this.data.animation.translateX(cur).step()
-    this.setData({
-      animationData: this.data.animation.export(),
-      cursor: --this.data.cursor,
-    })
-    console.log('bindTextAreaFocus =' + e)
   },
   onShareAppMessage: function () {
     return {
