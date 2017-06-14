@@ -5,8 +5,8 @@ var Calcer = require("../../lib/expression.js");
 var gridSwitch = false;
 var input = "";
 var placeholder = '|';
-var currpage = [0, 0]
-var prevpage = [0, 0]
+var currpos = [0, 0]
+var prevpos = [0, 0]
 var Page_Switch_Sensitivity = 50
 var iReg = null
 
@@ -88,7 +88,7 @@ Page({
     if (input.length == 0) {
       this.setData({
         resultStatus: "none",
-        inputString: ""
+        inputString: placeholder
       });
       return;
     }
@@ -119,22 +119,6 @@ Page({
         // complete
       }
     })
-  },
-  bindinput: function (e) {
-    iReg = new RegExp('(.{' + (this.data.cursor) + '})');
-    wx.hideKeyboard();
-  },
-  bindchange: function (e) {
-    wx.hideKeyboard();
-  },
-  bindfocus: function (e) {
-    wx.hideKeyboard();
-  },
-  bindblur: function (e) {
-    wx.hideKeyboard();
-  },
-  bindconfirm: function (e) {
-    wx.hideKeyboard();
   },
   bclick: function (e) {
     console.log(e.target.id);
@@ -211,6 +195,31 @@ Page({
           break;
         default:
           break;
+      }
+    }
+  },
+  touchStart: function (e) {
+    prevpos = getPosition(e)
+    console.log("Touch Start... " + prevpos[0], prevpos[1]);
+  },
+  touchMove: function (e) {
+    var pos = getPosition(e)
+    console.log("Touch Move... " + pos[0], pos[1], this.data.inputHeight);
+  },
+  longTap: function (e) {
+    console.log(e.timeStamp + '- long tap');
+  },
+  touchEnd: function (e) {
+    currpos = getPosition(e)
+    console.log("Touch End... " + currpos[0], currpos[1]);
+    var distance = currpos[0] - prevpos[0];
+    if (Math.abs(distance) > 50) {
+      if (distance > 0) {
+        e.target.id = '→';
+        this.bclick(e);
+      } else {
+        e.target.id = '←';
+        this.bclick(e);
       }
     }
   },
