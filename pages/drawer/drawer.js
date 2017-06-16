@@ -44,6 +44,9 @@ function draw(ctx, srcdata, color) {
       ctx.moveTo(srcdata[i][0], srcdata[i][1]);
       nan = false;
     }
+    if (!util.isVaild(srcdata[i][0]) || !util.isVaild(srcdata[i][0])) {
+      continue;
+    }
     ctx.lineTo(srcdata[i][0], srcdata[i][1]);
   }
   ctx.stroke();
@@ -187,19 +190,21 @@ function trace(ctx, position) {
 }
 
 function onPlot(ctx) {
-  input = ctx.data.inputString;
+  input = ctx.data.functions;
   if ("" != input) {
     if (data instanceof Array)
       data.length = 0;
-    data = Calcer.calcs(input, [-5, 5]);
-    origin = [canvasW / 2, canvasH / 2];
-    scale = util.selfAdapter(data, origin, canvasW, canvasH);
-    draw(context, data, "#ff0000");
-    if (gridSwitch) {
-      grid(context, origin);
+    data = Calcer.calcs(input, ctx.data.arange);
+    if (data != undefined || data != null) {
+      origin = [canvasW / 2, canvasH / 2];
+      scale = util.selfAdapter(data, origin, canvasW, canvasH);
+      draw(context, data, "#ff0000");
+      if (gridSwitch) {
+        grid(context, origin);
+      }
+      context.draw();
+      ploted = true;
     }
-    context.draw();
-    ploted = true;
   } else {
     context.clearRect(0, 0, canvasW, canvasH);
     context.draw();
@@ -207,7 +212,7 @@ function onPlot(ctx) {
   ctx.setData({
     canvasStatus: "flex",
     resultStatus: "flex",
-    SolveResult: input
+    SolveResult: input + " ←:[" + ctx.data.arange.toString() + "]"
   });
 }
 Page({
@@ -216,7 +221,8 @@ Page({
     canvasHeight: "0",
     lazytime: "500",
     btctrl: "START",
-    inputString: "",
+    functions: "",
+    arange: null,
     inputHeight: "",
     SolveResult: "",
     canvasTouchPosition: "",
@@ -249,8 +255,13 @@ Page({
         */
       }
     })
+    var out = util.dealInput(e.input);
+    if (null == out.arange) {
+      out.arange = [-5, 5];
+    }
     this.setData({
-      inputString: e.input,
+      functions: out.method,
+      arange: out.arange,
       inputHeight: H * 0.15,
       canvasWidth: W * 0.9,
       canvasHeight: H * 0.8
@@ -268,6 +279,15 @@ Page({
     context.setStrokeStyle("rgba(0,255,0)");
     origin = [canvasW / 2, canvasH / 2];
     onPlot(this);
+  },
+  onHide: function () {
+    // 页面隐藏
+    console.log("drawer is onHide...")
+  },
+  onUnload: function () {
+    // 页面关闭
+    wx.clearStorage();
+    console.log("drawer is onUnload...")
   },
   onLockCanvas: function (e) {
     var curTime = e.timeStamp;

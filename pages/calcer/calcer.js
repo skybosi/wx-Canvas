@@ -2,38 +2,14 @@ var app = getApp();
 var util = require("../../utils/util.js");
 var Data = require("../../data/data.js");
 var Calcer = require("../../lib/expression.js");
-var gridSwitch = false;
+var Font_Size = 20;
 var input = "";
 var placeholder = '|';
 var currpos = [0, 0]
 var prevpos = [0, 0]
 var Page_Switch_Sensitivity = 50
 var iReg = null
-
-Array.prototype.indexof = function (value) {
-  var that = this || [];
-  for (var i = 0; i < that.length; i++) {
-    if (that[i] == value)
-      return i;
-  }
-  return -1;
-}
-
-String.prototype.del = function (index) {
-  index = (index < 0) ? (this.length + index) : (index)
-  var ast = this.split('');
-  ast[index] = ''
-  return ast.join('');
-}
-
-String.prototype.swap = function (s, e) {
-  s = (s < 0) ? (this.length + s) : (s)
-  e = (e < 0) ? (this.length + e) : (e)
-  var ast = this.split('');
-  [ast[s], ast[e]] = [ast[e], ast[s]];
-  return ast.join('');
-}
-
+var pixelRatio = null
 function getPosition(e) {
   //console.log(e.touches[0].x,e.touches[0].y);
   //return [e.touches[0].x, e.touches[0].y];
@@ -46,6 +22,7 @@ Page({
     resultStatus: "none",
     SolveResult: "",
     cursor: 0,
+    cursorpx: 8,
     commonIds: ["Enter", "Plot", "Solve", "Del"],
     kyboardIds: [
       'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
@@ -62,10 +39,17 @@ Page({
     console.error(e.detail.errMsg);
   },
   onLoad: function (e) {
-    wx.hideKeyboard();
     iReg = new RegExp('(.{0})');
     this.data.kyboardIds = this.data.commonIds.concat(this.data.kyboardIds);
     this.data.basekeyIds = this.data.commonIds.concat(this.data.basekeyIds);
+    wx.getSystemInfo({
+      success: function (res) {
+        pixelRatio = res.pixelRatio;
+        var W = res.windowWidth;
+        var H = res.windowHeight;
+      }
+    })
+    var tmp = "acd".insert("b123", 1);
   },
   onReady: function (e) {
     console.log("calcer is ready...")
@@ -81,6 +65,13 @@ Page({
   },
   onUnload: function () {
     // 页面关闭
+    this.setData({
+      inputString: placeholder,
+      resultStatus: "none",
+      cursorpx: 8 / pixelRatio,
+      cursor: 0
+    });
+    wx.clearStorage();
     console.log("calcer is onUnload...")
   },
   onSolve: function (e) {
@@ -101,7 +92,7 @@ Page({
   onPlot: function () {
     input = this.data.inputString.replace(placeholder, '');
     var result = this.data.SolveResult
-    if ("" != result || "" == input || "null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
+    if ("" == input || "null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
       return;
     }
     wx.navigateTo({
@@ -134,10 +125,13 @@ Page({
       input = this.data.inputString + id;
     }
     if (index > 3) {
-      this.setData({
-        inputString: input,
-        cursor: this.data.cursor + id.length,
-      });
+      if (id != "y" && id != "=") {
+        this.setData({
+          inputString: input,
+          cursor: this.data.cursor + id.length,
+          cursorpx: (this.data.inputString.length * Font_Size + 8) / pixelRatio
+        });
+      }
     } else {
       switch (id) {
         case "Del":
@@ -146,6 +140,7 @@ Page({
             this.setData({
               inputString: this.data.inputString.del(pos),
               cursor: --this.data.cursor,
+              cursorpx: (this.data.inputString.length * Font_Size + 8) / pixelRatio,
               SolveResult: ""
             });
           }
@@ -198,6 +193,21 @@ Page({
       }
     }
   },
+  lbclick: function (e) {
+    var id = e.target.id;
+    switch (id) {
+      case "Del":
+        this.setData({
+          inputString: placeholder,
+          cursorpx: 8 / pixelRatio,
+          SolveResult: "",
+          cursor: 0
+        });
+        break;
+      default:
+        break;
+    }
+  },
   touchStart: function (e) {
     prevpos = getPosition(e)
     console.log("Touch Start... " + prevpos[0], prevpos[1]);
@@ -205,9 +215,6 @@ Page({
   touchMove: function (e) {
     var pos = getPosition(e)
     console.log("Touch Move... " + pos[0], pos[1], this.data.inputHeight);
-  },
-  longTap: function (e) {
-    console.log(e.timeStamp + '- long tap');
   },
   touchEnd: function (e) {
     currpos = getPosition(e)
@@ -221,6 +228,32 @@ Page({
         e.target.id = '←';
         this.bclick(e);
       }
+    }
+  },
+  longTap: function (e) {
+    app.globalData.clipboard = this.data.inputString.replace(placeholder, '');
+    console.log(e.timeStamp + '- long tap');
+  },
+  bindTap: function (e) {
+    var pos = getPosition(e)
+    if (pos[0] > this.data.cursorpx) {
+      this.setData({
+        inputString: this.data.inputString.replace(placeholder, '') + placeholder,
+        cursor: this.data.inputString.length - 1,
+      });
+    } else {
+      var ncursor = this.data.inputString.length - 1 + Math.ceil((pos[0] - this.data.cursorpx) / 10);
+      var ninput = this.data.inputString.replace(placeholder, '');
+      if (ncursor >= ninput.length) {
+        ninput += placeholder;
+      } else {
+        ninput = ninput.insert(placeholder, ncursor);
+      }
+      console.log(e.timeStamp + '- tap' + ninput + " ncursor:" + ncursor);
+      this.setData({
+        inputString: ninput,
+        cursor: ncursor,
+      });
     }
   },
   onShareAppMessage: function () {

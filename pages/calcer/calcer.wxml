@@ -5,8 +5,8 @@
     </view>-->
     <!--输入框-->
     <block>
-      <view class="text_con" bindlongtap="longTap" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd">
-        <view style="font-size:18px">{{inputString}}</view>
+      <view class="text_con" catchtap="bindTap" bindlongtap="longTap" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd">
+        <view style="font-size:20px">{{inputString}}</view>
       </view>
     </block>
     <view class="resultCtrl" style="display:{{resultStatus}}">
