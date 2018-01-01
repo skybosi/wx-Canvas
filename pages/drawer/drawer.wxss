@@ -45,6 +45,8 @@
 }
 
 .gridoff {
+  display: flex;  
+  flex-direction: row;
   float: right;
 }
 

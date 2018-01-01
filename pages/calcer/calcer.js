@@ -52,16 +52,16 @@ Page({
     var tmp = "acd".insert("b123", 1);
   },
   onReady: function (e) {
-    console.log("calcer is ready...")
+    // console.log("calcer is ready...")
     var self = this;
   },
   onShow: function () {
-    console.log("calcer is onShow...")
+    // console.log("calcer is onShow...")
     // 页面显示
   },
   onHide: function () {
     // 页面隐藏
-    console.log("calcer is onHide...")
+    // console.log("calcer is onHide...")
   },
   onUnload: function () {
     // 页面关闭
@@ -72,7 +72,7 @@ Page({
       cursor: 0
     });
     wx.clearStorage();
-    console.log("calcer is onUnload...")
+    // console.log("calcer is onUnload...")
   },
   onSolve: function (e) {
     input = this.data.inputString.replace(placeholder, '');
@@ -99,20 +99,20 @@ Page({
       url: '../drawer/drawer?input=' + input,
       success: function (res) {
         // success
-        console.log('onBtnClick success() res:');
+        // console.log('onBtnClick success() res:');
       },
       fail: function (e) {
         // fail
-        console.log('onBtnClick fail() !!!');
+        console.error('onBtnClick fail() !!!');
       },
       complete: function (e) {
-        console.log('onBtnClick complete() !!!');
+        // console.log('onBtnClick complete() !!!');
         // complete
       }
     })
   },
   bclick: function (e) {
-    console.log(e.target.id);
+    // console.log(e.target.id);
     var id = e.target.id;
     var index = this.data.basekeyIds.indexof(id)
     if (index == -1) { index = this.data.kyboardIds.indexof(id); }
@@ -210,15 +210,15 @@ Page({
   },
   touchStart: function (e) {
     prevpos = getPosition(e)
-    console.log("Touch Start... " + prevpos[0], prevpos[1]);
+    // console.log("Touch Start... " + prevpos[0], prevpos[1]);
   },
   touchMove: function (e) {
     var pos = getPosition(e)
-    console.log("Touch Move... " + pos[0], pos[1], this.data.inputHeight);
+    // console.log("Touch Move... " + pos[0], pos[1], this.data.inputHeight);
   },
   touchEnd: function (e) {
     currpos = getPosition(e)
-    console.log("Touch End... " + currpos[0], currpos[1]);
+    // console.log("Touch End... " + currpos[0], currpos[1]);
     var distance = currpos[0] - prevpos[0];
     if (Math.abs(distance) > 50) {
       if (distance > 0) {
@@ -232,7 +232,7 @@ Page({
   },
   longTap: function (e) {
     app.globalData.clipboard = this.data.inputString.replace(placeholder, '');
-    console.log(e.timeStamp + '- long tap');
+    // console.log(e.timeStamp + '- long tap');
   },
   bindTap: function (e) {
     var pos = getPosition(e)
@@ -249,7 +249,7 @@ Page({
       } else {
         ninput = ninput.insert(placeholder, ncursor);
       }
-      console.log(e.timeStamp + '- tap' + ninput + " ncursor:" + ncursor);
+      // console.log(e.timeStamp + '- tap' + ninput + " ncursor:" + ncursor);
       this.setData({
         inputString: ninput,
         cursor: ncursor,

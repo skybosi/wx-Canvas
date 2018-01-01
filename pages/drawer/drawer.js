@@ -15,15 +15,23 @@ var canvasW = 0;
 var canvasH = 0;
 var oldcolor;
 var gridSwitch = true;
+var modeSwitch = false;
 var input = "";
 var scale = 1.0;
 var unit = 1
 var curinput = ""
+var MODE_LINER = 0
+var MODE_SCATTER = 1
 //draw line each point
 function draw(ctx, srcdata, color) {
   if (color == undefined) {
     //color = "black";
     color = oldcolor;
+  }
+  var delta = 1;
+  if (modeSwitch == true)
+  {
+    delta = 2
   }
   ctx.save();
   ctx.beginPath();
@@ -34,7 +42,7 @@ function draw(ctx, srcdata, color) {
   //console.log("srcdata: " + srcdata);
   if (!isNaN(srcdata[0][1]) && !isNaN(srcdata[0][0]))
     ctx.moveTo(srcdata[0][0], srcdata[0][1]);
-  for (var i = 0; i < srcdata.length; i++) {
+  for (var i = 0; i < srcdata.length; i += delta) {
     //console.log(srcdata[i] + " " +srcdata[i][0] + " " + srcdata[i][1]);
     if (isNaN(srcdata[i][1]) || isNaN(srcdata[i][0])) {
       nan = true;
@@ -47,7 +55,12 @@ function draw(ctx, srcdata, color) {
     if (!util.isVaild(srcdata[i][0]) || !util.isVaild(srcdata[i][0])) {
       continue;
     }
-    ctx.lineTo(srcdata[i][0], srcdata[i][1]);
+    if (!modeSwitch){
+      ctx.lineTo(srcdata[i][0], srcdata[i][1]);
+    }else{
+      ctx.moveTo(srcdata[i][0], srcdata[i][1])
+      ctx.arc(srcdata[i][0], srcdata[i][1], 0.5, 0, 2 * Math.PI, true);
+    }
   }
   ctx.stroke();
   ctx.restore();
@@ -198,10 +211,10 @@ function onPlot(ctx) {
     if (data != undefined || data != null) {
       origin = [canvasW / 2, canvasH / 2];
       scale = util.selfAdapter(data, origin, canvasW, canvasH);
-      draw(context, data, "#ff0000");
       if (gridSwitch) {
         grid(context, origin);
-      }
+      }      
+      draw(context, data, "#ff0000");
       context.draw();
       ploted = true;
     }
@@ -237,7 +250,7 @@ Page({
     console.error(e.detail.errMsg);
   },
   onLoad: function (e) {
-    console.log("drawer is onload...")
+    // console.log("drawer is onload...")
     var W = 0;
     var H = 0;
     wx.getSystemInfo({
@@ -273,7 +286,7 @@ Page({
     canvasH = this.data.canvasHeight;
   },
   onReady: function (e) {
-    console.log("canvas is ready...")
+    // console.log("canvas is ready...")
     //使用wx.createContext获取绘图上下文context
     context = wx.createCanvasContext('firstCanvas');
     context.setStrokeStyle("rgba(0,255,0)");
@@ -282,12 +295,12 @@ Page({
   },
   onHide: function () {
     // 页面隐藏
-    console.log("drawer is onHide...")
+    // console.log("drawer is onHide...")
   },
   onUnload: function () {
     // 页面关闭
     wx.clearStorage();
-    console.log("drawer is onUnload...")
+    // console.log("drawer is onUnload...")
   },
   onLockCanvas: function (e) {
     var curTime = e.timeStamp;
@@ -295,7 +308,7 @@ Page({
     if (lastTime > 0) {
       var pressTime = curTime - lastTime
       if (pressTime < 300) {
-        console.log("double click " + curTime);
+        // console.log("double click " + curTime);
         if (locked == false) {
           locked = true;
           wx.showToast({
@@ -317,10 +330,10 @@ Page({
           })
         }
       } else {
-        console.log("click " + curTime);
+        // console.log("click " + curTime);
       }
     } else {
-      console.log("first click " + curTime);
+      // console.log("first click " + curTime);
     }
     this.setData({
       lastTapTime: curTime
@@ -354,7 +367,7 @@ Page({
         lazytime: this.data.lazytime -= 50
       });
     }
-    console.log("lazytime: " + this.data.lazytime + " " + this.data.btctrl);
+    // console.log("lazytime: " + this.data.lazytime + " " + this.data.btctrl);
   },
   slowTimer: function () {
     if (this.data.btctrl == "START") {
@@ -362,7 +375,7 @@ Page({
         lazytime: this.data.lazytime += 50
       });
     }
-    console.log("lazytime: " + this.data.lazytime);
+    // console.log("lazytime: " + this.data.lazytime);
   },
   touchStart: function (e) {
     var pos = getPosition(e);
@@ -400,7 +413,7 @@ Page({
     //console.log(e);
   },
   longTap: function (e) {
-    console.log(e.timeStamp + '- long tap');
+    // console.log(e.timeStamp + '- long tap');
     wx.canvasToTempFilePath({
       canvasId: 'firstCanvas',
       success: function success(res) {
@@ -410,12 +423,12 @@ Page({
             console.log('saved::' + res.savedFilePath);
           },
           complete: function fail(e) {
-            console.log(e.errMsg);
+            console.error(e.errMsg);
           }
         });
       },
       complete: function complete(e) {
-        console.log(e.errMsg);
+        console.error(e.errMsg);
       }
     });
   },
@@ -441,4 +454,7 @@ Page({
       context.draw();
     }
   },
+  modeSwitch: function () {
+    modeSwitch = !modeSwitch;
+  }
 });

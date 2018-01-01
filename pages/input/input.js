@@ -65,7 +65,7 @@ Page({
 
   },
   bclick: function (e) {
-    console.log(e.touches[0]);
+    // console.log(e.touches[0]);
     var x = e.touches[0].pageX;
     var y = e.touches[0].pageY;
     var id = e.target.id;

@@ -1,5 +1,5 @@
 <template name="keyboard">
-  <view class="content" style="background-color:{{BG}}">
+  <view id="keyboard" class="content" style="background-color:{{BG}}">
     <view class="kbctrl" bindtap="bclick" id="ctrl">
       <label>=</label>
     </view>

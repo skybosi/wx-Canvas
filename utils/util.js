@@ -155,7 +155,6 @@ module.exports = {
   selfAdapter: selfAdapter,
   formatTime: formatTime,
   dealInput: dealInput,
-  readData: readData,
   toString: toString,
   isVaild: isVaild,
   move: move,

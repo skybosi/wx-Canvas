@@ -9,6 +9,7 @@
       </view>
       <view class="gridoff">
         <switch type="switch" checked="true" bindchange="gridSwitch" />
+        <!-- <switch type="switch" checked="false" bindchange="modeSwitch" /> -->
       </view>
     </view>
     <view class="showCtrl">

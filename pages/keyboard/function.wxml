@@ -1,5 +1,5 @@
 <template name="function">
-  <view class="content" style="background-color:{{BG}}">
+  <view id="function" class="content" style="background-color:{{BG}}">
     <view class="kbctrl" bindtap="bclick" id="ctrl">
       <label>=</label>
     </view>

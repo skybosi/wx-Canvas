@@ -1,8 +1,8 @@
 {
   "pages":[    
     "pages/calcer/calcer",
-    "pages/drawer/drawer",
-    "pages/index/index",
+    "pages/index/index",    
+    "pages/drawer/drawer",    
     "pages/logs/logs",
     "pages/input/input"
   ],
