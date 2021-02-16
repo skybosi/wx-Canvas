@@ -1,31 +1,15 @@
 {
-  "pages":[    
+  "pages": [
     "pages/calcer/calcer",
-    "pages/index/index",    
-    "pages/drawer/drawer",    
-    "pages/logs/logs",
+    "pages/index/index",
+    "pages/drawer/drawer",
     "pages/input/input"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "wxCanvas",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
   },
-  "tabBar": {
-    "borderStyle": "black",
-    "list": [
-      {
-      "pagePath": "pages/calcer/calcer",
-      "text": "Calc",
-      "iconPath": "icon/icon_API.png",
-      "selectedIconPath": "icon/icon_API_HL.png"
-      },
-      {
-      "pagePath": "pages/logs/logs",
-      "text": "index",
-      "iconPath": "icon/icon_component.png",
-      "selectedIconPath": "icon/icon_component_HL.png"
-    }]
-  }
+  "sitemapLocation": "sitemap.json"
 }

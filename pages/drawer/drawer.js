@@ -1,7 +1,10 @@
+//index.js
+import Page from '../../components/page/page';
+
 var app = getApp();
 var util = require("../../utils/util.js");
 var Data = require("../../data/data.js");
-var Calcer = require("../../lib/expression.js");
+var Calcer = require("../../libs/expression.js");
 var cpuData = Data.data.cpu.slice();
 var timer = null;
 var ploted = false;
@@ -29,8 +32,7 @@ function draw(ctx, srcdata, color) {
     color = oldcolor;
   }
   var delta = 1;
-  if (modeSwitch == true)
-  {
+  if (modeSwitch == true) {
     delta = 2
   }
   ctx.save();
@@ -55,9 +57,9 @@ function draw(ctx, srcdata, color) {
     if (!util.isVaild(srcdata[i][0]) || !util.isVaild(srcdata[i][0])) {
       continue;
     }
-    if (!modeSwitch){
+    if (!modeSwitch) {
       ctx.lineTo(srcdata[i][0], srcdata[i][1]);
-    }else{
+    } else {
       ctx.moveTo(srcdata[i][0], srcdata[i][1])
       ctx.arc(srcdata[i][0], srcdata[i][1], 0.5, 0, 2 * Math.PI, true);
     }
@@ -213,7 +215,7 @@ function onPlot(ctx) {
       scale = util.selfAdapter(data, origin, canvasW, canvasH);
       if (gridSwitch) {
         grid(context, origin);
-      }      
+      }
       draw(context, data, "#ff0000");
       context.draw();
       ploted = true;

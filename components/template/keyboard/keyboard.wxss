@@ -1,0 +1,72 @@
+.plate-keyboard-container {
+  width: 100%;
+}
+
+.keyboard-all-panel {
+  padding-bottom: 10rpx;
+}
+
+.keyboard-panel {
+  width: 100%;
+  opacity:0.9;
+  display: flex;
+  padding-top: 10rpx;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.key-panel {
+  width: 25%;
+  font-size: 38rpx;
+  text-align: center;
+  line-height: 100rpx;
+  border-radius: 9rpx;
+  font-family: "微软雅黑";
+}
+
+.kbctrl {
+  text-align: center;
+  padding: 0rpx;
+}
+
+.ctrl {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: black;
+}
+
+.num {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #f78d1d;
+}
+
+.sign {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #fd8ddf;
+}
+
+.func {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #0095cd;
+}
+
+.lock {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #4d4d4d;
+}
+
+.key {
+  color: #d9eef7;
+  border: solid 1px white;
+  background: #f90;
+}
+
+.button-hover {
+  transform: translate(1rpx, 1rpx);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
+}

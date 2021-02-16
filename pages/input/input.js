@@ -1,4 +1,6 @@
 // pages/input/input.js
+import Page from '../../components/page/page';
+
 Page({
 
   /**

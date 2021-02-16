@@ -1,7 +1,10 @@
+//index.js
+import Page from '../../components/page/page';
+
 var app = getApp();
 var util = require("../../utils/util.js");
 var Data = require("../../data/data.js");
-var Calcer = require("../../lib/expression.js");
+var Calcer = require("../../libs/expression.js");
 var Font_Size = 20;
 var input = "";
 var placeholder = '|';
@@ -24,16 +27,101 @@ Page({
     cursor: 0,
     cursorpx: 8,
     commonIds: ["Enter", "Plot", "Solve", "Del"],
-    kyboardIds: [
-      'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
-      'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
-      'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '?',
-      "shiht", 'Enter', '', "shift"],
-    basekeyIds: [
-      "sin", "x", "1", "2", "3", "/", "()",
-      "cos", "y", "4", "5", "6", "*", "^",
-      "tan", "T", "7", "8", "9", "-", "sqrt",
-      "ln", "=", ",", "0", ".", "+", "[]"]
+    keyboardHeight: app.globalData.DiviceInfo.screenHeight * 0.6,
+    keyboards: [
+      {
+        head: [
+          { "t": "Enter", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
+          { "t": "Solve", "T": "ctrl" }, { "t": "Del", "T": "ctrl" }
+        ],
+        body: [
+          [
+            { "t": "asin", "T": "func" }, { "t": "π", "T": "func" },
+            { "t": "abs", "T": "num" }, { "t": "exp", "T": "num" },
+            { "t": "3", "T": "num" }, { "t": "/", "T": "sign" },
+            { "t": "()", "T": "sign" }
+          ],
+          [
+            { "t": "acos", "T": "func" }, { "t": "e", "T": "func" },
+            { "t": "ceil", "T": "num" }, { "t": "floor", "T": "num" },
+            { "t": "6", "T": "num" }, { "t": "*", "T": "sign" },
+            { "t": "^", "T": "sign" }
+          ],
+          [
+            { "t": "atan", "T": "func" }, { "t": "Φ", "T": "func" },
+            { "t": "7", "T": "num" }, { "t": "8", "T": "num" },
+            { "t": "9", "T": "num" }, { "t": "-", "T": "sign" },
+            { "t": "√", "T": "sign" }
+          ],
+          [
+            { "t": "log", "T": "func" }, { "t": "γ", "T": "func" },
+            { "t": ",", "T": "num" }, { "t": "0", "T": "num" },
+            { "t": ".", "T": "num" }, { "t": "+", "T": "sign" },
+            { "t": "[]", "T": "sign" }
+          ],
+        ]
+      },
+      {
+        head: [
+          { "t": "Enter", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
+          { "t": "Solve", "T": "ctrl" }, { "t": "Del", "T": "ctrl" }
+        ],
+        body: [
+          [
+            { "t": "sin", "T": "func" }, { "t": "x", "T": "func" },
+            { "t": "7", "T": "num" }, { "t": "8", "T": "num" },
+            { "t": "9", "T": "num" }, { "t": "/", "T": "sign" },
+            { "t": "()", "T": "sign" }
+          ],
+          [
+            { "t": "cos", "T": "func" }, { "t": "y", "T": "func" },
+            { "t": "4", "T": "num" }, { "t": "5", "T": "num" },
+            { "t": "6", "T": "num" }, { "t": "*", "T": "sign" },
+            { "t": "^", "T": "sign" }
+          ],
+          [
+            { "t": "tan", "T": "func" }, { "t": "T", "T": "func" },
+            { "t": "1", "T": "num" }, { "t": "2", "T": "num" },
+            { "t": "3", "T": "num" }, { "t": "-", "T": "sign" },
+            { "t": "√", "T": "sign" }
+          ],
+          [
+            { "t": "ln", "T": "func" }, { "t": "=", "T": "func" },
+            { "t": ",", "T": "num" }, { "t": "0", "T": "num" },
+            { "t": ".", "T": "num" }, { "t": "+", "T": "sign" },
+            { "t": "[]", "T": "sign" }
+          ],
+        ]
+      },
+      {
+        head: [
+          { "t": "Enter", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
+          { "t": "Solve", "T": "ctrl" }, { "t": "Del", "T": "ctrl" }
+        ],
+        body: [
+          [
+            { "t": "asin", "T": "func" }, { "t": "π", "T": "func" },
+            { "t": "abs", "T": "num" }, { "t": "exp", "T": "num" },
+            { "t": "。", "T": "num" }, { "t": "D", "T": "sign" }
+          ],
+          [
+            { "t": "acos", "T": "func" }, { "t": "i", "T": "func" },
+            { "t": "re", "T": "num" }, { "t": "im", "T": "num" },
+            { "t": "!", "T": "num" }, { "t": "∫", "T": "sign" }
+          ],
+          [
+            { "t": "atan", "T": "func" }, { "t": "e", "T": "func" },
+            { "t": "floor", "T": "num" }, { "t": "ceil", "T": "num" },
+            { "t": "E", "T": "num" }, { "t": "Limit", "T": "sign" }
+          ],
+          [
+            { "t": "log", "T": "func" }, { "t": "γ", "T": "func" },
+            { "t": ",", "T": "num" }, { "t": "∞", "T": "num" },
+            { "t": ".", "T": "num" }, { "t": "ans", "T": "sign" },
+          ],
+        ]
+      },
+    ],
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
@@ -113,9 +201,9 @@ Page({
   },
   bclick: function (e) {
     // console.log(e.target.id);
-    var id = e.target.id;
+    var dataset = e.currentTarget.dataset || e.target.dataset || {};
+    var id = dataset.text
     var index = this.data.basekeyIds.indexof(id)
-    if (index == -1) { index = this.data.kyboardIds.indexof(id); }
     var input = null;
     iReg = new RegExp('(.{' + (this.data.cursor) + '})');
     if (null != iReg) {
@@ -132,7 +220,7 @@ Page({
           cursorpx: (this.data.inputString.length * Font_Size + 8) / pixelRatio
         });
       }
-    } else {
+
       switch (id) {
         case "Del":
           var pos = this.data.cursor - 1;

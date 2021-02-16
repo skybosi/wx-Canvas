@@ -1,38 +1,22 @@
-<view class="screen">
+<import src="../../components/template/keyboard/keyboard.wxml" />
+<view class='screen'>
   <view class="stage">
-    <!--<view class="input" style="height:{{inputHeight}}rpx">
-      <input id="in" bindchange="bindchange" bindinput="bindinput" bindfocus="bindfocus" bindblur="bindblur" bindconfirm="bindconfirm" focus="true" placeholder="|" data-cur="1" value="{{inputString}}" />
-    </view>-->
-    <!--输入框-->
-    <block>
-      <view class="text_con" catchtap="bindTap" bindlongtap="longTap" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd">
-        <view style="font-size:20px">{{inputString}}</view>
-      </view>
-    </block>
+    <view class="text_con" catchtap="bindTap" bindlongtap="longTap" bindtouchstart="touchStart"
+      bindtouchmove="touchMove" bindtouchend="touchEnd">
+      <view style="font-size:20px">{{inputString}}</view>
+    </view>
     <view class="resultCtrl" style="display:{{resultStatus}}">
-      <view class="result">
-        <label>{{SolveResult}}</label>
-      </view>
+      <view class="result"> <label>{{SolveResult}}</label> </view>
     </view>
   </view>
-  <swiper current="1" class="keyboard" duration="300">
-    <swiper-item>
-      <view id="k" class="keyboard-item">
-        <import src="../keyboard/keyboard.wxml" />
-        <template is="keyboard" data="{{BG: 'red'}}" />
-      </view>
-    </swiper-item>
-    <swiper-item>
-      <view id="b" class="keyboard-item">
-        <import src="../keyboard/basekey.wxml" />
-        <template is="basekey" data="{{BG: 'green'}}" />
-      </view>
-    </swiper-item>
-    <swiper-item>
-      <view id="f" class="keyboard-item">
-        <import src="../keyboard/function.wxml" />
-        <template is="function" data="{{BG: 'blue'}}" />
-      </view>
-    </swiper-item>
-  </swiper>
+  <view class='keyboard-container'>
+    <swiper current="1" duration="100" style="height:{{keyboardHeight}}px">
+      <block wx:for="{{keyboards}}" wx:key="index" id="{{it}}">
+        <swiper-item>
+          <template is="keyboard-head" data="{{keyboard: item.head}}" />
+          <template is="keyboard-body" data="{{keyboard: item.body}}" />
+        </swiper-item>
+      </block>    
+    </swiper>
+  </view>
 </view>

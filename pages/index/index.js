@@ -1,4 +1,5 @@
 //index.js
+import Page from '../../components/page/page';
 //获取应用实例
 var app = getApp()
 Page({
