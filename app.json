@@ -2,13 +2,12 @@
   "pages": [
     "pages/calcer/calcer",
     "pages/index/index",
-    "pages/drawer/drawer",
-    "pages/input/input"
+    "pages/drawer/drawer"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "wxCanvas",
+    "navigationBarTitleText": "MathDrawer",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json"

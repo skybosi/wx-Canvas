@@ -1,10 +1,14 @@
+<!-- 
+  keyboard : [ {"t":"q","T":"key"},{"t":"w","T":"key"} ]
+-->
 <template name="keyboard-head">
   <view id="keyboard" class="plate-keyboard-container">
     <view class="keyboard-panel">
-      <view class="key-panel {{it.T}}" hover-class="button-hover" wx:for="{{keyboard}}" wx:key="index" wx:for-index="i"
-        wx:for-item="it" data-index="{{i}}" data-text="{{it.t}}" id="{{i}}" bindtap="bclick">
+      <button class="key-panel {{it.T}}" hover-class="button-hover" wx:for="{{keyboard}}" wx:key="index"
+        wx:for-index="i" wx:for-item="it" data-index="{{i}}" data-text="{{it.t}}" id="{{i}}" bindtap="bclick"
+        bindlongtap="longbclick">
         {{it.t}}
-      </view>
+      </button>
     </view>
   </view>
 </template>
@@ -19,10 +23,10 @@
   <view id="keyboard" class="plate-keyboard-container">
     <view class='keyboard-all-panel'>
       <view wx:for="{{keyboard}}" wx:key="index" wx:for-index="j" wx:for-item="item" id="{{j}}" class="keyboard-panel">
-        <view class="key-panel {{it.T}}" hover-class="button-hover" wx:for="{{item}}" wx:key="index" wx:for-index="i"
+        <button class="key-panel {{it.T}}" hover-class="button-hover" wx:for="{{item}}" wx:key="index" wx:for-index="i"
           wx:for-item="it" data-index="{{i}}" data-text="{{it.t}}" id="{{i}}" bindtap="bclick">
           {{it.t}}
-        </view>
+        </button>
       </view>
     </view>
   </view>

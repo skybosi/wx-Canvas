@@ -1,22 +1,33 @@
 <import src="../../components/template/keyboard/keyboard.wxml" />
 <view class='screen'>
-  <view class="stage">
-    <view class="text_con" catchtap="bindTap" bindlongtap="longTap" bindtouchstart="touchStart"
-      bindtouchmove="touchMove" bindtouchend="touchEnd">
-      <view style="font-size:20px">{{inputString}}</view>
+  <block wx:for="{{[1]}}" wx:key="index" id="{{it}}">
+    <view class="stage">
+      <view class="input" bindlongtap="longTap" bindtouchstart="touchStart" bindtouchmove="touchMove"
+        bindtouchend="touchEnd">
+        <view style="font-size:20px">{{inputHead}}</view>
+        <view class='cursor-blink'></view>
+        <view style="font-size:20px">{{inputTail}}</view>
+      </view>
+      <view class="resultCtrl" style="display:{{resultStatus}}">
+        <view class="result"> <label>{{SolveResult}}</label> </view>
+      </view>
     </view>
-    <view class="resultCtrl" style="display:{{resultStatus}}">
-      <view class="result"> <label>{{SolveResult}}</label> </view>
-    </view>
-  </view>
-  <view class='keyboard-container'>
-    <swiper current="1" duration="100" style="height:{{keyboardHeight}}px">
+  </block>
+  <view catchtap="switchKeyboard" style="height:100%;width:100%"> </view>
+  <block wx:if="{{keyboardShow}}">
+    <swiper current="1" duration="300" class='keyboard-container'
+      style="height:{{keyboardHeight ? keyboardHeight + 'px' : 'auto'}}">
       <block wx:for="{{keyboards}}" wx:key="index" id="{{it}}">
         <swiper-item>
-          <template is="keyboard-head" data="{{keyboard: item.head}}" />
-          <template is="keyboard-body" data="{{keyboard: item.body}}" />
+          <view id="swiper-item" style="padding-left:9rpx;padding-right:9rpx">
+            <template is="keyboard-head" data="{{keyboard: item.head}}" />
+            <template is="keyboard-body" data="{{keyboard: item.body}}" />
+          </view>
         </swiper-item>
-      </block>    
+      </block>
     </swiper>
-  </view>
+  </block>
+  <block wx:else>
+    <view class="extend">......</view>
+  </block>
 </view>

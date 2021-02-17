@@ -8,9 +8,9 @@
 
 .keyboard-panel {
   width: 100%;
-  opacity:0.9;
+  opacity: 0.9;
   display: flex;
-  padding-top: 10rpx;
+  padding-top: 5rpx;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
@@ -18,11 +18,19 @@
 
 .key-panel {
   width: 25%;
+  display: flex;
   font-size: 38rpx;
   text-align: center;
   line-height: 100rpx;
   border-radius: 9rpx;
+  justify-content: center;
   font-family: "微软雅黑";
+  transform: translate(0rpx, 0rpx);
+}
+
+.button-hover {
+  transform: translate(1rpx, 1rpx);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
 }
 
 .kbctrl {
@@ -64,9 +72,4 @@
   color: #d9eef7;
   border: solid 1px white;
   background: #f90;
-}
-
-.button-hover {
-  transform: translate(1rpx, 1rpx);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));
 }

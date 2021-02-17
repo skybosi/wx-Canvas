@@ -3,15 +3,13 @@ import Page from '../../components/page/page';
 
 var app = getApp();
 var util = require("../../utils/util.js");
-var Data = require("../../data/data.js");
+var Data = require("../../doc/data/data.js");
 var Calcer = require("../../libs/expression.js");
 var Font_Size = 20;
 var input = "";
-var placeholder = '|';
+var placeholder = '';
 var currpos = [0, 0]
 var prevpos = [0, 0]
-var Page_Switch_Sensitivity = 50
-var iReg = null
 var pixelRatio = null
 function getPosition(e) {
   //console.log(e.touches[0].x,e.touches[0].y);
@@ -21,17 +19,17 @@ function getPosition(e) {
 
 Page({
   data: {
-    inputString: placeholder,
+    inputHead: '',
+    inputTail: '',
     resultStatus: "none",
     SolveResult: "",
     cursor: 0,
     cursorpx: 8,
-    commonIds: ["Enter", "Plot", "Solve", "Del"],
-    keyboardHeight: app.globalData.DiviceInfo.screenHeight * 0.6,
     keyboards: [
       {
         head: [
-          { "t": "Enter", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
+          { "t": "←", "T": "ctrl" }, { "t": "→", "T": "ctrl" },
+          { "t": "↵", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
           { "t": "Solve", "T": "ctrl" }, { "t": "Del", "T": "ctrl" }
         ],
         body: [
@@ -63,7 +61,8 @@ Page({
       },
       {
         head: [
-          { "t": "Enter", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
+          { "t": "←", "T": "ctrl" }, { "t": "→", "T": "ctrl" },
+          { "t": "↵", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
           { "t": "Solve", "T": "ctrl" }, { "t": "Del", "T": "ctrl" }
         ],
         body: [
@@ -95,7 +94,8 @@ Page({
       },
       {
         head: [
-          { "t": "Enter", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
+          { "t": "←", "T": "ctrl" }, { "t": "→", "T": "ctrl" },
+          { "t": "↵", "T": "ctrl" }, { "t": "Plot", "T": "ctrl" },
           { "t": "Solve", "T": "ctrl" }, { "t": "Del", "T": "ctrl" }
         ],
         body: [
@@ -122,14 +122,20 @@ Page({
         ]
       },
     ],
+    keyboardShow: true,
   },
   canvasIdErrorCallback: function (e) {
     console.error(e.detail.errMsg);
   },
   onLoad: function (e) {
-    iReg = new RegExp('(.{0})');
-    this.data.kyboardIds = this.data.commonIds.concat(this.data.kyboardIds);
-    this.data.basekeyIds = this.data.commonIds.concat(this.data.basekeyIds);
+    var self = this
+    var query = wx.createSelectorQuery()
+    query.select('#swiper-item').boundingClientRect(function (res) {
+      console.log(res);
+      self.setData({
+        keyboardHeight: res.height
+      });
+    }).exec();
     wx.getSystemInfo({
       success: function (res) {
         pixelRatio = res.pixelRatio;
@@ -137,7 +143,6 @@ Page({
         var H = res.windowHeight;
       }
     })
-    var tmp = "acd".insert("b123", 1);
   },
   onReady: function (e) {
     // console.log("calcer is ready...")
@@ -153,24 +158,14 @@ Page({
   },
   onUnload: function () {
     // 页面关闭
-    this.setData({
-      inputString: placeholder,
-      resultStatus: "none",
-      cursorpx: 8 / pixelRatio,
-      cursor: 0
-    });
+    let data = this.data
+    data.cursorpx = 8 / pixelRatio
+    data.resultStatus = "none"
+    this.setData(data);
     wx.clearStorage();
-    // console.log("calcer is onUnload...")
   },
   onSolve: function (e) {
-    input = this.data.inputString.replace(placeholder, '');
-    if (input.length == 0) {
-      this.setData({
-        resultStatus: "none",
-        inputString: placeholder
-      });
-      return;
-    }
+    input = this.data.inputString;
     var result = Calcer.calc(input);
     this.setData({
       resultStatus: "flex",
@@ -178,7 +173,7 @@ Page({
     });
   },
   onPlot: function () {
-    input = this.data.inputString.replace(placeholder, '');
+    input = this.data.inputString;
     var result = this.data.SolveResult
     if ("" == input || "null" == result.toLowerCase() || "undefined" == result.toLowerCase() || "Syntax Error" == result) {
       return;
@@ -200,96 +195,78 @@ Page({
     })
   },
   bclick: function (e) {
-    // console.log(e.target.id);
-    var dataset = e.currentTarget.dataset || e.target.dataset || {};
-    var id = dataset.text
-    var index = this.data.basekeyIds.indexof(id)
-    var input = null;
-    iReg = new RegExp('(.{' + (this.data.cursor) + '})');
-    if (null != iReg) {
-      input = this.data.inputString.replace(iReg, '$1' + id);
-      iReg = null;
-    } else {
-      input = this.data.inputString + id;
+    let dataset = e.currentTarget.dataset || e.target.dataset || {};
+    let text = dataset.text
+    let dataChange = false
+    let pos = this.data.cursor;
+    let cursor = this.data.cursor
+    let inputHead = this.data.inputHead
+    let inputTail = this.data.inputTail
+    switch (text) {
+      case "Plot":
+        this.onPlot();
+        break;
+      case "Solve": case "↵":
+        this.onSolve();
+        break;
+      case "Del":
+        if (pos - 1 >= 0) {
+          dataChange = true
+          cursor = --this.data.cursor
+          inputTail = this.data.inputTail
+          inputHead = this.data.inputHead.substr(0, pos - 1)
+        }
+        break;
+      case "←":
+        if (pos - 1 >= 0) {
+          dataChange = true
+          cursor = --this.data.cursor
+          inputTail = this.data.inputHead.substr(pos - 1, pos) + this.data.inputTail
+          inputHead = this.data.inputHead.substr(0, pos - 1)
+        }
+        break;
+      case "→":
+        if (pos + 1 <= this.data.inputString.length) {
+          dataChange = true
+          cursor = ++this.data.cursor
+          inputHead = this.data.inputHead + this.data.inputTail.substr(0, 1)
+          inputTail = this.data.inputTail.substr(1)
+        }
+        break;
+      case "()": case "[]": case "{}":
+        dataChange = true
+        inputHead = this.data.inputHead + text.substr(0, 1)
+        inputTail = text.substr(1) + this.data.inputTail
+        cursor = this.data.cursor + text.length - 1
+        break;
+      default:
+        dataChange = true
+        inputHead = this.data.inputHead + text
+        inputTail = this.data.inputTail
+        cursor = this.data.cursor + text.length
+        break;
     }
-    if (index > 3) {
-      if (id != "y" && id != "=") {
-        this.setData({
-          inputString: input,
-          cursor: this.data.cursor + id.length,
-          cursorpx: (this.data.inputString.length * Font_Size + 8) / pixelRatio
-        });
-      }
-
-      switch (id) {
-        case "Del":
-          var pos = this.data.cursor - 1;
-          if (pos >= 0) {
-            this.setData({
-              inputString: this.data.inputString.del(pos),
-              cursor: --this.data.cursor,
-              cursorpx: (this.data.inputString.length * Font_Size + 8) / pixelRatio,
-              SolveResult: ""
-            });
-          }
-          break;
-        case "Plot":
-          this.onPlot();
-          break;
-        case "Solve":
-          this.onSolve();
-          break;
-        case "←":
-          var pos = this.data.cursor;
-          var ninput = ""
-          if (pos > 0) {
-            --pos;
-            ninput = this.data.inputString.swap(pos + 1, pos);
-          } else {
-            ninput = this.data.inputString;
-          }
-          this.setData({
-            inputString: ninput,
-            cursor: pos,
-            SolveResult: ""
-          });
-          break;
-        case "→":
-          var pos = this.data.cursor;
-          var ninput = ""
-          if (pos != this.data.inputString.length - 1) {
-            ++pos;
-            ninput = this.data.inputString.swap(pos - 1, pos);
-          } else {
-            ninput = this.data.inputString.swap(pos, pos + 1);
-          }
-          this.setData({
-            inputString: ninput,
-            cursor: pos,
-            SolveResult: ""
-          });
-          break;
-        case "ctrl":
-          var types = (++this.data.TYPE) % 3;
-          this.setData({
-            TYPE: types,
-            SolveResult: ""
-          });
-          break;
-        default:
-          break;
-      }
+    if (dataChange) {
+      this.setData({
+        cursor: cursor,
+        inputHead: inputHead,
+        inputTail: inputTail,
+        inputString: inputHead + inputTail
+      });
     }
   },
-  lbclick: function (e) {
-    var id = e.target.id;
-    switch (id) {
+  longbclick: function (e) {
+    let dataset = e.currentTarget.dataset || e.target.dataset || {};
+    let text = dataset.text
+    switch (text) {
       case "Del":
         this.setData({
-          inputString: placeholder,
+          cursor: 0,
+          inputHead: "",
+          inputTail: "",
+          inputString: "",
           cursorpx: 8 / pixelRatio,
           SolveResult: "",
-          cursor: 0
         });
         break;
       default:
@@ -310,45 +287,59 @@ Page({
     var distance = currpos[0] - prevpos[0];
     if (Math.abs(distance) > 50) {
       if (distance > 0) {
-        e.target.id = '→';
+        e.currentTarget.dataset = e.currentTarget.dataset || {};
+        e.target.dataset = e.target.dataset || {};
+        e.currentTarget.dataset.text = '→';
+        e.target.dataset.text = '→';
         this.bclick(e);
       } else {
-        e.target.id = '←';
+        e.currentTarget.dataset = e.currentTarget.dataset || {};
+        e.target.dataset = e.target.dataset || {};
+        e.currentTarget.dataset.text = '←';
+        e.target.dataset.text = '←';
         this.bclick(e);
       }
     }
   },
   longTap: function (e) {
-    app.globalData.clipboard = this.data.inputString.replace(placeholder, '');
+    app.globalData.clipboard = this.data.inputString
     // console.log(e.timeStamp + '- long tap');
   },
   bindTap: function (e) {
     var pos = getPosition(e)
     if (pos[0] > this.data.cursorpx) {
       this.setData({
-        inputString: this.data.inputString.replace(placeholder, '') + placeholder,
+        inputString: this.data.inputString,
         cursor: this.data.inputString.length - 1,
       });
     } else {
       var ncursor = this.data.inputString.length - 1 + Math.ceil((pos[0] - this.data.cursorpx) / 10);
-      var ninput = this.data.inputString.replace(placeholder, '');
+      var ninput = this.data.inputString
       if (ncursor >= ninput.length) {
         ninput += placeholder;
       } else {
         ninput = ninput.insert(placeholder, ncursor);
       }
-      // console.log(e.timeStamp + '- tap' + ninput + " ncursor:" + ncursor);
       this.setData({
         inputString: ninput,
         cursor: ncursor,
       });
     }
   },
-  onShareAppMessage: function () {
-    return {
-      title: '自定义分享标题',
-      desc: '自定义分享描述',
-      path: '/page/user?id=123'
+
+  //键盘显示/隐藏
+  switchKeyboard(e) {
+    let curTime = e.timeStamp;
+    let lastTime = this.lastTapDiffTime;
+    this.lastTapDiffTime = curTime;
+    let diff = curTime - lastTime;
+    //两次点击间隔小于250ms, 认为是双击
+    if (diff < 250) {
+      this.setData({
+        keyboardShow: !this.data.keyboardShow
+      });
+    } else {
+      // 单击事件延时300毫秒执行，这和最初的浏览器的点击250ms延时有点像。
     }
   },
 });

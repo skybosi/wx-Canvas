@@ -3,7 +3,7 @@ import Page from '../../components/page/page';
 
 var app = getApp();
 var util = require("../../utils/util.js");
-var Data = require("../../data/data.js");
+var Data = require("../../doc/data/data.js");
 var Calcer = require("../../libs/expression.js");
 var cpuData = Data.data.cpu.slice();
 var timer = null;
